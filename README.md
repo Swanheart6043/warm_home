@@ -1,2 +1,2 @@
 # SmartHome
-null
+An experimental project
