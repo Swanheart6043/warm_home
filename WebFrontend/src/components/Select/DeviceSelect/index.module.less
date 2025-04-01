@@ -1,0 +1,31 @@
+.modalSelect {
+  height: 100%;
+  display: flex;
+  .tableArea {
+    padding: 10px;
+  }
+  .rightArea {
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+    .rightAreaTitle {
+      padding: 15px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .rightAreaBody {
+      height: 574px;
+      padding: 15px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: auto;
+      .rowItem {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+  }
+}
