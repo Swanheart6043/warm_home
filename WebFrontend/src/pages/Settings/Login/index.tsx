@@ -23,23 +23,20 @@ const Login: React.FC = () => {
 
   const submit = async (values: LoginParams) => {
     try {
-      const msg = await login({
-        ...values,
-      })
-      const loginResult = msg.datas
-      if (msg.resp_code !== 0) {
-        message.error(msg.resp_msg)
-        return
-      }
-      if (loginResult && loginResult.access_token) {
-        sessionStorage.setItem('access_token', loginResult.access_token)
-      }
+      // const msg = await login({
+      //   ...values,
+      // })
+      // const loginResult = msg.datas
+      // if (msg.resp_code !== 0) {
+      //   message.error(msg.resp_msg)
+      //   return
+      // }
+      // if (loginResult && loginResult.access_token) {
+      //   sessionStorage.setItem('access_token', loginResult.access_token)
+      // }
       message.success('登录成功！')
-      await fetchUserInfo()
+      // await fetchUserInfo()
       if (!history) return
-      // const { query } = history.location
-      // const { redirect } = query as { redirect: string }
-      // history.push(redirect || '/')
       history.push('/')
     } catch (error) {
       const defaultLoginFailureMessage = '登录失败，请重试！'

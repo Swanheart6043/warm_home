@@ -1,10 +1,10 @@
-package com.example2.demo2;
+package com.raphael.WebBackend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Demo2ApplicationTests {
+class WebBackendApplicationTests {
 
 	@Test
 	void contextLoads() {

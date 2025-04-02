@@ -1,13 +1,13 @@
-package com.example2.demo2;
+package com.raphael.WebBackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Demo2Application {
+public class WebBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Demo2Application.class, args);
+		SpringApplication.run(WebBackendApplication.class, args);
 	}
 
 }
