@@ -3,9 +3,7 @@
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
-
 #include <stdio.h>
-
 #include "leddrv.h"
 
 int main(int argc,char *argv[])
@@ -20,8 +18,8 @@ int main(int argc,char *argv[])
 		return 1;
 	}
 
-	sscanf(argv[2],"%d",&onoff);
-	sscanf(argv[3],"%d",&no);
+	sscanf(argv[2],"%d", &onoff);
+	sscanf(argv[3],"%d", &no);
 
 	if(no < 2 || no > 5)
 	{
@@ -29,7 +27,7 @@ int main(int argc,char *argv[])
 		return 2;
 	}
 
-	fd = open(argv[1],O_RDONLY);
+	fd = open(argv[1], O_RDONLY);
 	if(fd < 0)
 	{
 		printf("open %s failed\n",argv[1]);
