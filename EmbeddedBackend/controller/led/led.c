@@ -19,7 +19,6 @@ int main() {
     if (content_length_str != NULL) {
         content_length = atoi(content_length_str);
     }
-    
     if (content_length <= 0) {
         printf("{\"error\":\"No data received\"}\n");
         return 1;
@@ -31,7 +30,6 @@ int main() {
         printf("{\"error\":\"Memory allocation failed\"}\n");
         return 1;
     }
-    
     fread(input, content_length, 1, stdin);
     input[content_length] = '\0';
     
