@@ -1,8 +1,8 @@
 ifeq ($(KERNELRELEASE),)
 
 ifeq ($(ARCH),arm)
-KERNELDIR ?= /home/swanheart/codes/drivers/linux-3.14
-ROOTFS ?= /home/swanheart/codes/drivers/rootfs
+KERNELDIR ?= /home/swanheart/codes/linux-3.14
+ROOTFS ?= /home/swanheart/codes/rootfs
 else
 KERNELDIR ?= /lib/modules/$(shell uname -r)/build
 endif
