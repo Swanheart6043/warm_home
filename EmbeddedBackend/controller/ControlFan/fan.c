@@ -3,6 +3,14 @@
 #include <string.h>
 #include "cJSON.h"
 
+int handleGetRequest() {
+
+}
+
+int handlePostRequest() {
+    
+}
+
 int main() {
     char *content_length_str;
     int content_length = 0;
