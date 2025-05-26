@@ -1,11 +1,22 @@
 import './App.css'
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { FileImageOutlined, CrownOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu } from 'antd';
 import type { MenuProps } from 'antd';
-import logo from './assets/react.svg'
+import logo from '/react.svg'
 import defaultAvatar from './assets/default-avatar.png'
+import { Home } from './views/Dashboard/Home';
+import { Environmental } from './views/Dashboard/Environmental';
+import { PhotoWall } from './views/Dashboard/PhotoWall';
+import { Monitor } from './views/Dashboard/Monitor';
+import { Lamp } from './views/Control/Lamp';
+import { Speakers } from './views/Control/Speakers';
+import { Fan } from './views/Control/Fan';
+import { DigitalTube } from './views/Control/DigitalTube';
 
 function App() {
+  const nav = useNavigate()
+
   const items: Required<MenuProps>['items'][number][] = [
     {
       key: 'home',
@@ -45,6 +56,10 @@ function App() {
     },
   ];
 
+  const handleClick: MenuProps['onClick'] = (e) => {
+    nav('/' + e.key)
+  }
+
   return (
     <div className='w-full h-full flex' style={{ height: '100%' }}>
       <div className='bg-[#ffffff]' style={{ height: '56px', borderBottom: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -66,11 +81,23 @@ function App() {
             defaultOpenKeys={['hardwareControl']}
             mode="inline"
             items={items}
+            onClick={handleClick}
           />
         </div>
 
         <div style={{ flex: '1', padding: '32px 40px' }}>
-          
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/environmental" element={<Environmental />} />
+            <Route path="/monitor" element={<Monitor />} />
+            <Route path="/photoWall" element={<PhotoWall />} />
+
+            <Route path="/lamp" element={<Lamp />} />
+            <Route path="/speakers" element={<Speakers />} />
+            <Route path="/fan" element={<Fan />} />
+            <Route path="/digitalTube" element={<DigitalTube />} />
+            <Route path="*" element={<h2>页面不存在</h2>} />
+          </Routes>
         </div>
       </div>
     </div>

@@ -7,6 +7,6 @@ export const Environmental = () => {
   }, [])
 
   return (
-    <div></div>
+    <div>Environmental</div>
   )
 }
