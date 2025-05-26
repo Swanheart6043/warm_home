@@ -1,5 +1,7 @@
 export const Monitor = () => {
   return (
-    <div>Monitor</div>
+    <div>
+      <video src="/test.mp4" controls></video>
+    </div>
   )
 }

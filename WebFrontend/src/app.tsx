@@ -1,6 +1,6 @@
 import './App.css'
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { FileImageOutlined, CrownOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined, UserOutlined } from '@ant-design/icons';
+import { FileImageOutlined, CrownOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined } from '@ant-design/icons';
 import { Avatar, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import logo from '/react.svg'
@@ -19,7 +19,7 @@ function App() {
 
   const items: Required<MenuProps>['items'][number][] = [
     {
-      key: 'home',
+      key: '',
       label: '首页',
       icon: <CrownOutlined />,
     },
@@ -49,11 +49,6 @@ function App() {
         { key: 'digitalTube', label: '数码管' },
       ],
     },
-    {
-      key: 'me',
-      label: '个人中心',
-      icon: <UserOutlined />,
-    },
   ];
 
   const handleClick: MenuProps['onClick'] = (e) => {
@@ -77,7 +72,7 @@ function App() {
         <div style={{ borderRight: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 8px' }}>
           <Menu
             style={{ width: 256, background: 'linear-gradient(#ffffff, #f5f5f5 28%)', border: 'none' }}
-            defaultSelectedKeys={['home']}
+            defaultSelectedKeys={['']}
             defaultOpenKeys={['hardwareControl']}
             mode="inline"
             items={items}
