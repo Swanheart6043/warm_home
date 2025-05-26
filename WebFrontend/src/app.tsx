@@ -2,6 +2,8 @@ import './App.css'
 import { FileImageOutlined, CrownOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu } from 'antd';
 import type { MenuProps } from 'antd';
+import logo from './assets/react.svg'
+import defaultAvatar from './assets/default-avatar.png'
 
 function App() {
   const items: Required<MenuProps>['items'][number][] = [
@@ -46,14 +48,12 @@ function App() {
   return (
     <div className='w-full h-full flex' style={{ height: '100%' }}>
       <div className='bg-[#ffffff]' style={{ height: '56px', borderBottom: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          万家灯火
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <img width={28} src={logo} />
+          <span style={{ fontSize: '18px', fontWeight: '600' }}>云控智家</span>
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span>
-            <Avatar size={16} icon={<UserOutlined />} />
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Avatar size="default" src={defaultAvatar} />
           <span style={{ color: 'rgba(0, 0, 0, 0.45)', fontSize: '14px' }}>Raphael_Hu</span>
         </div>
       </div>
@@ -70,7 +70,7 @@ function App() {
         </div>
 
         <div style={{ flex: '1', padding: '32px 40px' }}>
-
+          
         </div>
       </div>
     </div>
