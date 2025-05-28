@@ -11,7 +11,7 @@
 #include <linux/of_gpio.h>
 #include <linux/of.h>
 #include <linux/platform_device.h>
-#include "../../common/include/led.h"
+#include "../../embedded_common/include/led.h"
 
 static int __init led_init(void);
 static void __exit led_exit(void);
