@@ -6,6 +6,23 @@
 #include <stdio.h>
 #include "led.h"
 
+void* thread() {
+    long threadId = pthread_self();
+    // hui shou xian cheng
+    // pthread_detach(threadId);
+    printf("当前线程id: %lu\n", threadId);
+    
+    pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+    sleep(1);
+    printf("can cancel\n");
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
+
+    // pthread_cleanup_push(handleClean, "hello");
+    // pthread_cleanup_pop(1);
+    // 相当于return，但是推荐用exit这个函数;
+    // pthread_exit(NULL);
+}
+
 int main(int argc, char* argv[]) {
     int fd = -1;
 	int onoff = 0;
