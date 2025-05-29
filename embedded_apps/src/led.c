@@ -4,9 +4,13 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdio.h>
-#include "led.h"
+#include "../../embedded_common/include/led.h"
 
-void* thread() {
+void handleClean(void* str){
+    printf("%s\n", (char*)str);
+}
+
+void* led_thread() {
     long threadId = pthread_self();
     // hui shou xian cheng
     // pthread_detach(threadId);
@@ -21,10 +25,7 @@ void* thread() {
     // pthread_cleanup_pop(1);
     // 相当于return，但是推荐用exit这个函数;
     // pthread_exit(NULL);
-}
-
-int main(int argc, char* argv[]) {
-    int fd = -1;
+	int fd = -1;
 	int onoff = 0;
 	int no = 0;
 
