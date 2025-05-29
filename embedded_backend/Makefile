@@ -1,7 +1,10 @@
 CC = gcc
-CFLAGS = -Wall -O2 -static
+CJSON_INC = ../embedded_common/include
+CJSON_LIB = ../embedded_common/lib
+CFLAGS = -Wall -Wextra -O2 -I$(CJSON_INC)
+LDFLAGS = -L$(CJSON_LIB) -lcjson
+SOURCES = ./src/led.c
 TARGET = ./build/led.cgi
-SOURCES = ./src/led.c ./src/cJSON.c
 
 $(TARGET): $(SOURCES)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCES) -lm
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCES) $(LDFLAGS)

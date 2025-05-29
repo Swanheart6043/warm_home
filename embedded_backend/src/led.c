@@ -16,7 +16,6 @@ void respond_json(int code, cJSON *data_obj, bool success) {
 
     // 添加 fields
     cJSON_AddNumberToObject(root, "code", code);
-    cJSON_AddBoolToObject(root, "success", success);
     if (data_obj) {
         // data 是一个对象或数组
         cJSON_AddItemToObject(root, "data", data_obj);
@@ -24,6 +23,7 @@ void respond_json(int code, cJSON *data_obj, bool success) {
         // data = null
         cJSON_AddNullToObject(root, "data");
     }
+    cJSON_AddBoolToObject(root, "success", success);
 
     // 设置HTTP响应头
     printf("Content-Type: application/json\r\n\r\n");
