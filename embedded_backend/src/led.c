@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "../../embedded_common/include/cJSON.h"
+#include "../lib/cjson/cJSON.h"
 
 // 通用响应函数，利用cJSON构造并输出
 void respond_json(int code, cJSON *data_obj, bool success) {
