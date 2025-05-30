@@ -3,12 +3,12 @@
 #include <string.h>
 #include "cJSON.h"
 
-int handleGetRequest() {
-
+int handleGetReflash() {
+    
 }
 
-int handlePostRequest() {
-    
+int handleGetRequest() {
+
 }
 
 int main() {

@@ -2,7 +2,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "../lib/cjson/cJSON.h"
+
+int send_message(const char *text) {
+    key_t key = ftok(".", 65);
+    int msgid = msgget(key, 0666 | IPC_CREAT);
+    if (msgid < 0) {
+        perror("msgget");
+        return -1;
+    }
+
+    struct msgbuf message;
+    message.mtype = 1;  // 类型为 1
+    strncpy(message.mtext, text, MAX_TEXT - 1);
+    message.mtext[MAX_TEXT - 1] = '\0';
+
+    if (msgsnd(msgid, &message, strlen(message.mtext)+1, 0) < 0) {
+        perror("msgsnd");
+        return -1;
+    }
+
+    return 0;
+}
 
 // 通用响应函数，利用cJSON构造并输出
 void respond_json(int code, cJSON *data_obj, bool success) {

@@ -4,10 +4,30 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "../../embedded_common/include/led.h"
 
 void handleClean(void* str){
     printf("%s\n", (char*)str);
+}
+
+char* getMsg() {
+	key_t key = ftok("/tmp/msgqueue.key", 65);
+    int msgid = msgget(key, 0666 | IPC_CREAT);
+    if (msgid < 0) {
+        perror("msgget");
+        return 1;
+    }
+    struct msgbuf message;
+    while (1) {
+        memset(&message, 0, sizeof(message));
+        if (msgrcv(msgid, &message, sizeof(message.mtext), 0, 0) < 0) {
+            perror("msgrcv");
+            break;
+        }
+        printf("Received: %s\n", message.mtext);
+    }
 }
 
 void* led_thread() {
@@ -25,6 +45,9 @@ void* led_thread() {
     // pthread_cleanup_pop(1);
     // 相当于return，但是推荐用exit这个函数;
     // pthread_exit(NULL);
+
+	getMsg();
+
 	int fd = -1;
 	int onoff = 0;
 	int no = 0;
@@ -56,5 +79,6 @@ void* led_thread() {
 
 	close(fd);
 	fd = -1;
+	msgctl(msgid, IPC_RMID, NULL);
 	return 0;
 }
