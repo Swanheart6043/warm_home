@@ -1,5 +1,6 @@
 import { Switch, Table, type TableProps } from "antd"
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 interface DataType {
   key: string;
@@ -15,6 +16,14 @@ export const Lamp = () => {
     { key: '4', name: 'Led4', checked: false },
   ])
   
+  useEffect(() => {
+    const getList = async () => {
+      const result = await axios.get('/cgi-bin/led.cgi')
+      console.log(result, 'xxxxxxxxxxxx')
+    }
+    getList();
+  }, [])
+
   const columns: TableProps<DataType>['columns'] = [
     {
       title: '名称',
