@@ -1,13 +1,9 @@
 CC = gcc
-CFLAGS = -Wall -O2 -static
-TARGET = led.cgi
-SOURCES = led.c cJSON.c
+CJSON_INC = ./lib/cjson
+CJSON_LIB = ./lib/cjson
+CFLAGS = -Wall -Wextra -O2 -I$(CJSON_INC)
+SOURCES = ./src/led.c ./lib/cjson/cJSON.c
+TARGET = ./build/led.cgi
 
 $(TARGET): $(SOURCES)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCES) -lm
-
-strip:
-	strip $(TARGET)
-
-clean:
-	rm -f $(TARGET)
+	$(CC) $(CFLAGS) -o $(TARGET) $(SOURCES)
