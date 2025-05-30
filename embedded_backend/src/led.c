@@ -91,7 +91,7 @@ int handle_post() {
 int main() {    
     const char* method = getenv("REQUEST_METHOD");
     if (method == NULL) {
-        respond_json(-1, "request method error", false);
+        respond_json(-1, NULL, false);
         return -1;
     }
     
