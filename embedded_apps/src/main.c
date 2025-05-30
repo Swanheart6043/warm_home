@@ -1,7 +1,15 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
-#include "include.h"
+
+void* led_thread();
+void* buzzer_thread();
+void* fan_thread();
+void* digital_tube_thread();
+void* camera_thread();
+void* adc_thread();
+void* accelerator_thread();
+void* gyroscope_thread();
 
 int main() {
     pthread_t pthread_led_tid;
