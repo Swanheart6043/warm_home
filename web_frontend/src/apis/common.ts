@@ -14,3 +14,5 @@ axios.interceptors.response.use((response) => {
   }
   message.error(errMsg);
 });
+
+export default axios

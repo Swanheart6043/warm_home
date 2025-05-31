@@ -9,10 +9,7 @@ import { Home } from './views/Dashboard/Home';
 import { Environmental } from './views/Dashboard/Environmental';
 import { PhotoWall } from './views/Dashboard/PhotoWall';
 import { Monitor } from './views/Dashboard/Monitor';
-import { Lamp } from './views/Control/Lamp';
-import { Speakers } from './views/Control/Speakers';
-import { Fan } from './views/Control/Fan';
-import { DigitalTube } from './views/Control/DigitalTube';
+import { Control } from './views/Control';
 
 function App() {
   const nav = useNavigate()
@@ -34,20 +31,14 @@ function App() {
       icon: <CameraOutlined />,
     },
     {
-      key: 'photoWall',
+      key: 'photo',
       label: '历时照片',
       icon: <FileImageOutlined />,
     },
     {
-      key: 'hardwareControl',
+      key: 'control',
       label: '硬件控制',
       icon: <WindowsOutlined />,
-      children: [
-        { key: 'lamp', label: '灯具' },
-        { key: 'speakers', label: '音箱' },
-        { key: 'fan', label: '风扇' },
-        { key: 'digitalTube', label: '数码管' },
-      ],
     },
   ];
 
@@ -80,17 +71,13 @@ function App() {
           />
         </div>
 
-        <div style={{ flex: '1', padding: '32px 40px' }}>
+        <div style={{ flex: '1', overflow: 'auto' }}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/environmental" element={<Environmental />} />
             <Route path="/monitor" element={<Monitor />} />
-            <Route path="/photoWall" element={<PhotoWall />} />
-
-            <Route path="/lamp" element={<Lamp />} />
-            <Route path="/speakers" element={<Speakers />} />
-            <Route path="/fan" element={<Fan />} />
-            <Route path="/digitalTube" element={<DigitalTube />} />
+            <Route path="/photo" element={<PhotoWall />} />
+            <Route path="/control" element={<Control />} />
             <Route path="*" element={<h2>页面不存在</h2>} />
           </Routes>
         </div>
