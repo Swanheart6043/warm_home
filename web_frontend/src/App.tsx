@@ -5,10 +5,10 @@ import { Avatar, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import logo from '/react.svg'
 import defaultAvatar from './assets/default-avatar.png'
-import { Home } from './views/Dashboard/Home';
-import { Environmental } from './views/Dashboard/Environmental';
-import { PhotoWall } from './views/Dashboard/PhotoWall';
-import { Monitor } from './views/Dashboard/Monitor';
+import { Home } from './views/Home';
+import { Environmental } from './views/Environmental';
+import { PhotoWall } from './views/PhotoWall';
+import { Monitor } from './views/Monitor';
 import { Control } from './views/Control';
 
 function App() {

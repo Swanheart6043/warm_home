@@ -1,5 +1,5 @@
 import axios from "axios"
-import type { ControlRow } from "./controlType"
+import type { ControlRow } from "./apiType"
 
 export const fetchControlData = async () => {
   await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
@@ -40,4 +40,19 @@ export const updateFan = () => {
 export const updateDigitalTube = () => {
   const result = axios.post('/cgi-bin/control.cgi')
   return result
+}
+
+export const fetchEnvironmentalData = async () => {
+  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
+  return []
+}
+
+export const fetchMonitor = async () => {
+  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
+  return []
+}
+
+export const fetchPhotoWall = async () => {
+  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
+  return []
 }
