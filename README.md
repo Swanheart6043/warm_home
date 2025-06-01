@@ -10,9 +10,9 @@ embedded_apps - 嵌入式应用层
 embedded_backend - 嵌入式后端
 
 # 项目技术栈
-嵌入式：c/c++ boa cjson 消息队列 共享内存  
+嵌入式：c/c++ boa cjson 消息队列 共享内存 zeebig IIC ADC PWM  
 web后端：java spring  
-web前端：react antd vite  
+web前端：react antd vite axios  
 
 # 问题总结
 ### CGI中使用JSON
@@ -26,3 +26,12 @@ web前端：react antd vite
 
 ### 硬件控制页，首次进去看不到硬件的状态，不知道硬件开了没
 使用2个消息队列，一个请求队列，一个响应队列，分别对应get和post请求
+
+### cgi如何给独立的前端传输视频？
+待解决
+
+### 网络通信没印象，需要复习
+待解决
+
+### IIC ADC总线没印象，需要复习
+待解决
