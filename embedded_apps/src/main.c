@@ -22,14 +22,6 @@ int main() {
         return -1;
     }
     printf("Main thread started, waiting commands...\n");
-    if (pthread_create(&led_tid, NULL, (void*)led_thread, NULL) != 0) {
-        perror("Failed to create led thread");
-        return -1;
-    }
-    if (pthread_create(&buzzer_tid, NULL, (void*)buzzer_thread, NULL) != 0) {
-        perror("Failed to create buzzer thread");
-        return -1;
-    }
     while(1) {
         msg_buffer_t msg;
         // 阻塞接收消息 (mtype=0 接收任何类型的消息)
@@ -37,10 +29,18 @@ int main() {
 
         switch(msg.type) {
             case MSG_LED_CONTROL:
+                if (pthread_create(&led_tid, NULL, (void*)led_thread, NULL) != 0) {
+                    perror("Failed to create led thread");
+                    return -1;
+                }
                 pthread_join(led_tid, NULL);
                 printf ("pthread led end\n");
                 break;
             case MSG_CAMERA_START:
+                if (pthread_create(&buzzer_tid, NULL, (void*)buzzer_thread, NULL) != 0) {
+                    perror("Failed to create buzzer thread");
+                    return -1;
+                }
                 pthread_join(buzzer_tid, NULL);
                 printf ("pthread buzzer end\n");
                 break;
