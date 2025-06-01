@@ -12,24 +12,6 @@ void handleClean(void* str){
     printf("%s\n", (char*)str);
 }
 
-char* getMsg() {
-	key_t key = ftok("/tmp/msgqueue.key", 65);
-    int msgid = msgget(key, 0666 | IPC_CREAT);
-    if (msgid < 0) {
-        perror("msgget");
-        return 1;
-    }
-    struct msgbuf message;
-    while (1) {
-        memset(&message, 0, sizeof(message));
-        if (msgrcv(msgid, &message, sizeof(message.mtext), 0, 0) < 0) {
-            perror("msgrcv");
-            break;
-        }
-        printf("Received: %s\n", message.mtext);
-    }
-}
-
 void* led_thread() {
     long threadId = pthread_self();
     // hui shou xian cheng
@@ -45,8 +27,6 @@ void* led_thread() {
     // pthread_cleanup_pop(1);
     // 相当于return，但是推荐用exit这个函数;
     // pthread_exit(NULL);
-
-	getMsg();
 
 	int fd = -1;
 	int onoff = 0;
