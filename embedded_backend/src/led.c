@@ -50,10 +50,7 @@ int handle_get() {
         perror("msgget");
         return -1;
     }
-    struct message {
-        long type;
-        char text[MSGMAX];
-    }msg = { 1, "read" };
+    struct message { long type; char text[MSGMAX] }msg = { 1, "read" };
     int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
     if (result < 0) {
         perror("msgsnd");
@@ -101,18 +98,14 @@ int handle_post() {
 
     // tong zhi app
     key_t key = ftok(".", 65);
-    int msgid = msgget(key, 0666 | IPC_CREAT);
+    int msgid = msgget(key, IPC_CREAT);
     if (msgid < 0) {
         perror("msgget");
-        return -1;
     }
-    struct msgbuf message = NULL
-    message.mtype = 1;
-    strncpy(message.mtext, text, MAX_TEXT - 1);
-    message.mtext[MAX_TEXT - 1] = '\0';
-    if (msgsnd(msgid, &message, strlen(message.mtext)+1, 0) < 0) {
+    struct message { long type; char text[MSGMAX] }msg = { 1, "on 1" };
+    int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
+    if (result < 0) {
         perror("msgsnd");
-        return -1;
     }
     
     // shu chu

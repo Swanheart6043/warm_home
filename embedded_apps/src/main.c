@@ -1,6 +1,8 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
+// #include <sys/ipc.h>
+#include <sys/msg.h>
 
 void* led_thread();
 void* buzzer_thread();
@@ -15,39 +17,51 @@ int main() {
     pthread_t led_tid;
     pthread_t buzzer_tid;
 
-    key_t key = ftok(".", 'A');
-    int msgid = msgget(key, 0666 | IPC_CREAT);
-    if (msgid == -1) {
+    key_t key = ftok(".", 65);
+    int msg_id = msgget(key, IPC_CREAT);
+    if (msg_id == -1) {
         perror("msgget failed");
         return -1;
     }
-    printf("Main thread started, waiting commands...\n");
-    while(1) {
-        msg_buffer_t msg;
-        // 阻塞接收消息 (mtype=0 接收任何类型的消息)
-        ssize_t ret = msgrcv(msgid, &msg, sizeof(msg) - sizeof(long), 0, 0);
 
-        switch(msg.type) {
-            case MSG_LED_CONTROL:
-                if (pthread_create(&led_tid, NULL, (void*)led_thread, NULL) != 0) {
-                    perror("Failed to create led thread");
-                    return -1;
-                }
-                pthread_join(led_tid, NULL);
-                printf ("pthread led end\n");
-                break;
-            case MSG_CAMERA_START:
-                if (pthread_create(&buzzer_tid, NULL, (void*)buzzer_thread, NULL) != 0) {
-                    perror("Failed to create buzzer thread");
-                    return -1;
-                }
-                pthread_join(buzzer_tid, NULL);
-                printf ("pthread buzzer end\n");
-                break;
-            default:
-                printf("Unknown message type: %d\n", msg.type);
-                break;
+    printf("App started, waiting commands\n");
+    printf(".............................\n");
+    
+    while(1) {
+        struct Message { long type; char text[100] }msg;
+        ssize_t result = msgrcv(msg_id, &msg, sizeof(msg) - sizeof(long), 0, 0);
+
+        if (msg.text) {
+            printf("msgrcv %s\n", msg.text);
         }
+        
+        int led_thread_running = 0;
+        int buzzer_thread_running = 0;
+        if (msg.type == 1) {
+            if (led_thread_running) {
+                printf("Stopping led thread\n");
+                pthread_join(led_tid, NULL);
+                led_thread_running = 0;
+            }
+            int led_thread_result = pthread_create(&led_tid, NULL, (void*)led_thread, NULL);
+            if (led_thread_result == 0) {
+                printf ("Led thread started\n");
+                led_thread_running = 1;
+            } else {
+                perror("Failed to create led thread");
+            }
+        }
+        if (msg.type == 2) {
+            if (buzzer_tid) {
+                pthread_join(buzzer_tid, NULL);
+            }
+            int buzzer_thread_result = pthread_create(&buzzer_tid, NULL, (void*)buzzer_thread, NULL);
+            if (buzzer_thread_result != 0) {
+                perror("Failed to create buzzer thread");
+            }
+            printf ("pthread buzzer end\n");
+        }
+        
         // 短暂休眠10ms，避免CPU占用过高
         usleep(10000);
     }
