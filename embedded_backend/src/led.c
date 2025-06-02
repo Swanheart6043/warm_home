@@ -4,7 +4,6 @@
 #include <stdbool.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include <linux/msg.h>
 #include "../lib/cjson/cJSON.h"
 
 // 通用响应函数，利用cJSON构造并输出
@@ -44,18 +43,18 @@ void format_response(int code, cJSON *data_obj, bool success) {
 
 int handle_get() {
     // tong zhi app
-    key_t key = ftok(".", 65);
-    int msgid = msgget(key, 0666 | IPC_CREAT);
-    if (msgid < 0) {
-        perror("msgget");
-        return -1;
-    }
-    struct message { long type; char text[MSGMAX] }msg = { 1, "read" };
-    int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
-    if (result < 0) {
-        perror("msgsnd");
-        return -1;
-    }
+    // key_t key = ftok(".", 65);
+    // int msgid = msgget(key, 0666 | IPC_CREAT);
+    // if (msgid < 0) {
+    //     perror("msgget");
+    //     return -1;
+    // }
+    // struct message { long type; char text[100] }msg = { 1, "read" };
+    // int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
+    // if (result < 0) {
+    //     perror("msgsnd");
+    //     return -1;
+    // }
     // res
     cJSON *data = cJSON_CreateObject();
     cJSON_AddStringToObject(data, "led1", "on");
@@ -97,19 +96,19 @@ int handle_post() {
     }
 
     // tong zhi app
-    key_t key = ftok(".", 65);
-    int msgid = msgget(key, IPC_CREAT);
+    key_t key = ftok("/tmp", 'g');
+    int msgid = msgget(key, IPC_CREAT|0666);
     if (msgid < 0) {
         perror("msgget");
     }
-    struct message { long type; char text[MSGMAX] }msg = { 1, "on 1" };
+    struct message { long type; char text[100] }msg = { 1, "on 1" };
     int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
     if (result < 0) {
         perror("msgsnd");
     }
     
     // shu chu
-    format_response(0, NULL, true);
+    format_response(2, NULL, true);
     // remove
     cJSON_Delete(json);
 }

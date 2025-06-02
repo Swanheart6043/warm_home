@@ -17,8 +17,8 @@ int main() {
     pthread_t led_tid;
     pthread_t buzzer_tid;
 
-    key_t key = ftok(".", 65);
-    int msg_id = msgget(key, IPC_CREAT);
+    key_t key = ftok("/tmp", 'g');
+    int msg_id = msgget(key, IPC_CREAT|IPC_EXCL|0666);
     if (msg_id == -1) {
         perror("msgget failed");
         return -1;
@@ -31,7 +31,7 @@ int main() {
         struct Message { long type; char text[100] }msg;
         ssize_t result = msgrcv(msg_id, &msg, sizeof(msg) - sizeof(long), 0, 0);
 
-        if (msg.text) {
+        if (msg.type) {
             printf("msgrcv %s\n", msg.text);
         }
         
