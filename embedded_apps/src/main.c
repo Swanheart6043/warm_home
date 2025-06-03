@@ -1,25 +1,81 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
-
-void* led_thread();
-void* buzzer_thread();
-void* fan_thread();
-void* digital_tube_thread();
-void* camera_thread();
-void* adc_thread();
-void* accelerator_thread();
-void* gyroscope_thread();
+#include <sys/msg.h>
+#include "../include/common.h"
 
 int main() {
-    pthread_t pthread_led_tid;
-    pthread_t pthread_buzzer_tid;
-    
-    pthread_create(&pthread_led_tid, NULL, (void*)led_thread, NULL);
-    pthread_create(&pthread_buzzer_tid, NULL, (void*)buzzer_thread, NULL);
+    pthread_t led_tid;
+    pthread_t buzzer_tid;
+    pthread_t collection_tid;
+    pthread_t camera_tid;
 
-    pthread_cancel(pthread_led_tid);
-    pthread_cancel(pthread_buzzer_tid);
-    sleep(1);
+    // Create messages
+    printf("Message queue preparation\n");
+    int msg_id = msgget(ftok("/tmp", 'g'), IPC_CREAT|IPC_EXCL|0666);
+    if (msg_id == -1) {
+        perror("msgget failed");
+        return -1;
+    }
+    printf("Message queue complete\n");
+    
+    // Create some resident thread
+    int collection_thread_result = pthread_create(&collection_tid, NULL, (void*)collection_thread, NULL);
+    if (collection_thread_result != 0) {
+        perror("Failed to create collection thread");
+    }
+    int camera_thread_result = pthread_create(&camera_tid, NULL, (void*)camera_thread, NULL);
+    if (camera_thread_result != 0) {
+        perror("Failed to create camera thread");
+    }
+    
+    printf("App started, waiting commands...\n");    
+    while(1) {
+        // Listen messages
+        struct Message { long type; char text[100] }msg;
+        ssize_t result = msgrcv(msg_id, &msg, sizeof(msg) - sizeof(long), 0, 0);
+        if (msg.type) printf("msgrcv: %s\n", msg.text);
+        int led_thread_running = 0;
+        int buzzer_thread_running = 0;
+        
+        // Handle or create temp threads
+        if (msg.type == 1) {
+            if (led_thread_running) {
+                printf("Stopping led thread\n");
+                pthread_join(led_tid, NULL);
+                led_thread_running = 0;
+            }
+            int led_thread_result = pthread_create(&led_tid, NULL, (void*)led_thread, NULL);
+            if (led_thread_result == 0) {
+                printf ("Led thread started\n");
+                led_thread_running = 1;
+            } else {
+                perror("Failed to create led thread");
+            }
+        }
+        
+        if (msg.type == 2) {
+            if (buzzer_tid) {
+                pthread_join(buzzer_tid, NULL);
+            }
+            int buzzer_thread_result = pthread_create(&buzzer_tid, NULL, (void*)buzzer_thread, NULL);
+            if (buzzer_thread_result != 0) {
+                perror("Failed to create buzzer thread");
+            }
+            printf ("pthread buzzer end\n");
+        }
+
+        if (msg.type == 3) {
+
+        }
+
+        if (msg.type == 4) {
+
+        }
+        
+        // 短暂休眠10ms，避免CPU占用过高
+        usleep(10000);
+    }
+
     return 0;
 }
