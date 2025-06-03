@@ -1,8 +1,8 @@
 CC = gcc
-CJSON_INC = ./lib/cjson
-CJSON_LIB = ./lib/cjson
+CJSON_INC = ../embedded_common/lib/cjson
+CJSON_LIB = ../embedded_common/lib/cjson
 CFLAGS = -Wall -Wextra -O2 -I$(CJSON_INC)
-SOURCES = ./src/led.c ./lib/cjson/cJSON.c
+SOURCES = ./src/led.c ../embedded_common/lib/cjson/cJSON.c
 TARGET = ./build/led.cgi
 
 $(TARGET): $(SOURCES)

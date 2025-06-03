@@ -2,17 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/msg.h>
-
-void* led_thread();
-void* buzzer_thread();
-void* fan_thread();
-void* digital_tube_thread();
-void* camera_thread();
-void* adc_thread();
-void* accelerator_thread();
-void* gyroscope_thread();
-void* collection_thread();
-void* camera_thread();
+#include "../include/common.h"
 
 int main() {
     pthread_t led_tid;
