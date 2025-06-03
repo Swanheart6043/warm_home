@@ -4,63 +4,8 @@
 #include <stdbool.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../lib/cjson/cJSON.h"
-
-// 通用响应函数，利用cJSON构造并输出
-void format_response(int code, cJSON *data_obj, bool success) {
-    // 构造最外层对象
-    cJSON *root = cJSON_CreateObject();
-    if (!root) {
-        // 内存分配失败
-        fprintf(stderr, "Failed to create JSON root\n");
-        return;
-    }
-
-    // 添加 fields
-    cJSON_AddNumberToObject(root, "code", code);
-    if (data_obj) {
-        // data 是一个对象或数组
-        cJSON_AddItemToObject(root, "data", data_obj);
-    } else {
-        // data = null
-        cJSON_AddNullToObject(root, "data");
-    }
-    cJSON_AddBoolToObject(root, "success", success);
-
-    // 设置HTTP响应头
-    printf("Content-Type: application/json\r\n\r\n");
-
-    // 打印 JSON 字符串
-    char *json_str = cJSON_PrintUnformatted(root);
-    if (json_str) {
-        printf("%s", json_str);
-        free(json_str);
-    }
-
-    // 清理
-    cJSON_Delete(root);
-}
-
-int handle_get() {
-    // tong zhi app
-    // key_t key = ftok(".", 65);
-    // int msgid = msgget(key, 0666 | IPC_CREAT);
-    // if (msgid < 0) {
-    //     perror("msgget");
-    //     return -1;
-    // }
-    // struct message { long type; char text[100] }msg = { 1, "read" };
-    // int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
-    // if (result < 0) {
-    //     perror("msgsnd");
-    //     return -1;
-    // }
-    // res
-    cJSON *data = cJSON_CreateObject();
-    cJSON_AddStringToObject(data, "led1", "on");
-    cJSON_AddStringToObject(data, "led2", "on");
-    format_response(0, data, true);
-}
+#include "../../embedded_common/lib/cjson/cJSON.h"
+#include "../include/format_response.h"
 
 int handle_post() {
     // 获取POST数据长度

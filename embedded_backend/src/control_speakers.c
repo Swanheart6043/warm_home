@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../lib/cjson/cJSON.h"
+#include "../../embedded_common/lib/cjson/cJSON.h"
+#include "../include/format_response.h"
 
 int handle_post() {
     // 获取POST数据长度

@@ -4,7 +4,8 @@
 #include <stdbool.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "../lib/cjson/cJSON.h"
+#include "../../embedded_common/lib/cjson/cJSON.h"
+#include "../include/format_response.h"
 
 int handle_post() {
     // 获取POST数据长度
@@ -53,26 +54,15 @@ int handle_post() {
     
     // shu chu
     format_response(2, NULL, true);
-    // remove
     cJSON_Delete(json);
 }
 
-int main() {    
+int main() {
     const char* method = getenv("REQUEST_METHOD");
-    if (method == NULL) {
+    if (strcmp(method, "POST") != 0) {
         format_response(-1, NULL, false);
         return -1;
     }
-    
-    if (strcmp(method, "GET") == 0) {
-        handle_get();
-        return 0;
-    }
-    
-    if (strcmp(method, "POST") == 0) {
-        handle_post();
-        return 0;
-    }
-    
+    handle_post();
     return 0;
 }
