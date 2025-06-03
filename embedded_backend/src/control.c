@@ -71,13 +71,13 @@ int main() {
         { 1, "数码管", false },
     };
     cJSON* lamp = format_array(lamp_list);
+    // cJSON* speaker = format_array(speaker_list);
+    // cJSON* fan = format_array(fan_list);
+    // cJSON* digital_tube = format_array(digital_tube_list);
     cJSON_AddItemToObject(data, "lamp", lamp);
-    cJSON* speaker = format_array(speaker_list);
-    cJSON_AddItemToObject(data, "speakers", speaker);
-    cJSON* fan = format_array(fan_list);
-    cJSON_AddItemToObject(data, "fan", fan);
-    cJSON* digital_tube = format_array(digital_tube_list);
-    cJSON_AddItemToObject(data, "digitalTube", digital_tube);
+    // cJSON_AddItemToObject(data, "speakers", speaker);
+    // cJSON_AddItemToObject(data, "fan", fan);
+    // cJSON_AddItemToObject(data, "digitalTube", digital_tube);
     format_response(0, data, true);
 
     return 0;
