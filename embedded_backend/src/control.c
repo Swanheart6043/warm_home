@@ -70,12 +70,14 @@ int main() {
     struct Item digital_tube_list[1] = {
         { 1, "数码管", false },
     };
-    cJSON* array = format_array(lamp_list);
-    cJSON_AddItemToObject(data, "lamp", array);
-
-    cJSON_AddStringToObject(data, "speakers", "on");
-    cJSON_AddStringToObject(data, "fan", "on");
-    cJSON_AddStringToObject(data, "digitalTube", "on");
+    cJSON* lamp = format_array(lamp_list);
+    cJSON_AddItemToObject(data, "lamp", lamp);
+    cJSON* speaker = format_array(speaker_list);
+    cJSON_AddItemToObject(data, "speakers", speaker);
+    cJSON* fan = format_array(fan_list);
+    cJSON_AddItemToObject(data, "fan", fan);
+    cJSON* digital_tube = format_array(digital_tube_list);
+    cJSON_AddItemToObject(data, "digitalTube", digital_tube);
     format_response(0, data, true);
 
     return 0;
