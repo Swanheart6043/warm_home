@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include "../lib/cjson/cJSON.h"
+#include "../../../embedded_common/lib/cjson/cJSON.h"
 
 int format_response(int code, cJSON *data_obj, bool success) {
     cJSON *root = cJSON_CreateObject();
