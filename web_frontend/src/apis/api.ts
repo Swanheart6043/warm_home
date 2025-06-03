@@ -1,58 +1,42 @@
 import axios from "axios"
-import type { ControlRow } from "./apiType"
+import type { Response, ControlRow, Control } from "./apiType"
 
 export const fetchControlData = async () => {
-  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
-  return {
-    lamp: [
-      { key: '1', name: 'Led1', checked: false },
-      { key: '2', name: 'Led2', checked: false },
-      { key: '3', name: 'Led3', checked: false },
-      { key: '4', name: 'Led4', checked: false },
-    ],
-    speakers: [
-      { key: '1', name: '音箱', checked: false }
-    ],
-    fan: [
-      { key: '1', name: '风扇', checked: false }
-    ],
-    digitalTube: [
-      { key: '1', name: '数码管', checked: false }
-    ]
-  }
+  const result = await axios.get<Response<Control>>('/cgi-bin/control.cgi')
+  return result.data
 }
 
-export const updateLamp = () => {
-  const result = axios.post('/cgi-bin/control.cgi')
+export const updateLamp = (params: unknown) => {
+  const result = axios.post('/cgi-bin/control_lamp.cgi', params)
   return result
 }
 
 export const updateSpeakers = () => {
-  const result = axios.post('/cgi-bin/control.cgi')
+  const result = axios.post('/cgi-bin/control_speakers.cgi')
   return result
 }
 
 export const updateFan = () => {
-  const result = axios.post('/cgi-bin/control.cgi')
+  const result = axios.post('/cgi-bin/control_fan.cgi')
   return result
 }
 
 export const updateDigitalTube = () => {
-  const result = axios.post('/cgi-bin/control.cgi')
+  const result = axios.post('/cgi-bin/control_lamp_special.cgi')
   return result
 }
 
 export const fetchEnvironmentalData = async () => {
-  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
+  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/environment.cgi')
   return []
 }
 
 export const fetchMonitor = async () => {
-  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
+  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/monitor.cgi')
   return []
 }
 
 export const fetchPhotoWall = async () => {
-  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/led.cgi')
+  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/photo.cgi')
   return []
 }

@@ -1,6 +1,6 @@
 import { Switch, Table, type TableProps } from "antd"
 import { useEffect, useState } from "react";
-import { fetchControlData } from "../apis/api";
+import { fetchControlData, updateLamp } from "../apis/api";
 import type { ControlRow } from "../apis/apiType";
 
 export const Control = () => {
@@ -12,15 +12,20 @@ export const Control = () => {
   useEffect(() => {
     const getList = async () => {
       const result = await fetchControlData()
-      setListForLamp(result.lamp)
-      setListForSpeakers(result.speakers)
-      setListForFan(result.fan)
-      setListForDigitalTube(result.digitalTube)
+      debugger
+      setListForLamp(result.data?.lamp || [])
+      setListForSpeakers(result.data?.speakers || [])
+      setListForFan(result.data?.fan || [])
+      setListForDigitalTube(result.data?.digitalTube || [])
     }
     getList();
   }, [])
 
-  const handleLampChange = (row: ControlRow) => (value: boolean) => {
+  const handleLampChange = (row: ControlRow) => async (value: boolean) => {
+    await updateLamp({
+      operate: 'on',
+      whichLed: 1
+    })
     row.checked = value
   }
   const handleSpeakersChange = (row: ControlRow) => (value: boolean) => {
