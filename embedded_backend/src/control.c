@@ -13,11 +13,12 @@ struct Item {
 
 cJSON* format_array(struct Item list[]) {
     cJSON *array = cJSON_CreateArray();
+    int i;
     if (array == NULL) {
         return NULL;
     }
     
-    for (int i = 0; i < 4; ++i) {
+    for (i = 0; i < 4; ++i) {
         cJSON *obj = cJSON_CreateObject();
         if (obj == NULL) {
             return NULL;
