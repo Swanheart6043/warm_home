@@ -59,10 +59,10 @@ function App() {
         </div>
       </div>
 
-      <div style={{ height: 'calc(100% - 57px)', background: 'linear-gradient(#ffffff, #f5f5f5 28%)', display: 'flex' }}>
+      <div style={{ height: 'calc(100% - 57px)', background: '#f5f5f5', display: 'flex' }}>
         <div style={{ borderRight: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 8px' }}>
           <Menu
-            style={{ width: 256, background: 'linear-gradient(#ffffff, #f5f5f5 28%)', border: 'none' }}
+            style={{ width: 256, background: '#f5f5f5', border: 'none' }}
             defaultSelectedKeys={['']}
             defaultOpenKeys={['hardwareControl']}
             mode="inline"

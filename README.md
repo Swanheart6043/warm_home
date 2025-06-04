@@ -1,18 +1,24 @@
 # 云控智家
-一个只能家居项目
+一个智能家居项目
 
 # 项目架构
 见docs目录中的architecture中的架构图
 
 # 代码结构
-doc - 文档
+doc - 文档  
 embedded_apps - 嵌入式应用层  
-embedded_backend - 嵌入式后端
+embedded_backend - 嵌入式后端  
+embedded_common - 嵌入式公共代码  
+embedded_drivers - 嵌入式驱动  
+embedded_server - boa源码  
+web_frontend - web前端页面  
+web_frontend_mini_program - 小程序(后续支持)  
+web_backend - web java后端服务器(后续支持)  
 
 # 项目技术栈
-嵌入式：c/c++ boa cjson 消息队列 共享内存 zeebig IIC ADC PWM  
-web后端：java spring  
+嵌入式：c/c++ boa cjson 多线程 消息队列 共享内存 zeebig IIC ADC PWM 串口 视频流  
 web前端：react antd vite axios  
+web后端：java spring  
 
 # 问题总结
 ### CGI中使用JSON
@@ -34,4 +40,13 @@ web前端：react antd vite axios
 待解决
 
 ### IIC ADC总线没印象，需要复习
+待解决
+
+### 编译器不同，对c99语法的支持会有问题
+待解决
+
+### Makefile中增加平台判断
+待解决
+
+### 后端返回多个时cgi报错
 待解决

@@ -1,6 +1,6 @@
 export const PhotoWall = () => {
   return (
-    <div style={{ display: 'flex', gap: '24px' }}>
+    <div style={{ height: '100%', padding: '20px', display: 'flex', gap: '24px' }}>
       {[1, 2, 3].map(() => (
         <div style={{ 
           height: '182px',

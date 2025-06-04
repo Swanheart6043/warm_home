@@ -1,4 +1,4 @@
-import { Switch, Table, type TableProps } from "antd"
+import { message, Switch, Table, type TableProps } from "antd"
 import { useEffect, useState } from "react";
 import { fetchControlData, updateLamp } from "../apis/api";
 import type { ControlRow } from "../apis/apiType";
@@ -8,25 +8,26 @@ export const Control = () => {
   const [listForSpeakers, setListForSpeakers] = useState<ControlRow[]>([])
   const [listForFan, setListForFan] = useState<ControlRow[]>([])
   const [listForDigitalTube, setListForDigitalTube] = useState<ControlRow[]>([])
-  
+  const [messageApi, contextHolder] = message.useMessage()
+
   useEffect(() => {
     const getList = async () => {
       const result = await fetchControlData()
-      debugger
-      setListForLamp(result.data?.lamp || [])
-      setListForSpeakers(result.data?.speakers || [])
-      setListForFan(result.data?.fan || [])
-      setListForDigitalTube(result.data?.digitalTube || [])
+      setListForLamp(result.data?.lamp?.map(item => ({ ...item, key: String(item.key) })) || [])
+      setListForSpeakers(result.data?.speakers?.map(item => ({ ...item, key: String(item.key) })) || [])
+      setListForFan(result.data?.fan?.map(item => ({ ...item, key: String(item.key) })) || [])
+      setListForDigitalTube(result.data?.digitalTube?.map(item => ({ ...item, key: String(item.key) })) || [])
     }
     getList();
   }, [])
 
   const handleLampChange = (row: ControlRow) => async (value: boolean) => {
-    await updateLamp({
-      operate: 'on',
-      whichLed: 1
+    const result = await updateLamp({operate: 'on', whichLed: 1})
+    if (!result.success) return
+    messageApi.success("操作成功")
+    setListForLamp((newList) => {
+      return newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked }))
     })
-    row.checked = value
   }
   const handleSpeakersChange = (row: ControlRow) => (value: boolean) => {
     row.checked = value
@@ -83,24 +84,49 @@ export const Control = () => {
       title: '操作', 
       dataIndex: 'checked', 
       width: 100, 
-      render: (checked: boolean, row: ControlRow) => <Switch checked={row.checked} onChange={handleDigitalTubeChange(row)} />
+      render: (checked: boolean, row: ControlRow) => <Switch checked={checked} onChange={handleDigitalTubeChange(row)} />
     }
   ]
 
   return (
     <div style={{ height: '100%', padding: '20px' }}>
       <div style={{ backgroundColor: '#fff', padding: '20px', marginBottom: '20px' }}>
-        <Table<ControlRow> columns={columnsForLamp} dataSource={listForLamp} pagination={false} />
+        <Table<ControlRow> 
+          rowKey={(r) => r.key || ''}
+          columns={columnsForLamp} 
+          dataSource={listForLamp} 
+          pagination={false} 
+        />
       </div>
+      
       <div style={{ backgroundColor: '#fff', padding: '20px', marginBottom: '20px' }}>
-        <Table<ControlRow> columns={columnsForSpeakers} dataSource={listForSpeakers} pagination={false} />
+        <Table<ControlRow> 
+          rowKey={(r) => r.key || ''}
+          columns={columnsForSpeakers} 
+          dataSource={listForSpeakers} 
+          pagination={false} 
+        />
       </div>
+      
       <div style={{ backgroundColor: '#fff', padding: '20px', marginBottom: '20px' }}>
-        <Table<ControlRow> columns={columnsForFan} dataSource={listForFan} pagination={false} />
+        <Table<ControlRow> 
+          rowKey={(r) => r.key || ''}
+          columns={columnsForFan} 
+          dataSource={listForFan} 
+          pagination={false} 
+        />
       </div>
+      
       <div style={{ backgroundColor: '#fff', padding: '20px' }}>
-        <Table<ControlRow> columns={columnsForDigitalTube} dataSource={listForDigitalTube} pagination={false} />
+        <Table<ControlRow> 
+          rowKey={(r) => r.key || ''}
+          columns={columnsForDigitalTube} 
+          dataSource={listForDigitalTube} 
+          pagination={false} 
+        />
       </div>
+
+      {contextHolder}
     </div>
   )
 }
