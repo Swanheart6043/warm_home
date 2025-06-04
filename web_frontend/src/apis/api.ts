@@ -6,9 +6,9 @@ export const fetchControlData = async () => {
   return result.data
 }
 
-export const updateLamp = (params: unknown) => {
-  const result = axios.post('/cgi-bin/control_lamp.cgi', params)
-  return result
+export const updateLamp = async (params: unknown) => {
+  const result = await axios.post<Response<null>>('/cgi-bin/control_lamp.cgi', params)
+  return result.data
 }
 
 export const updateSpeakers = () => {
