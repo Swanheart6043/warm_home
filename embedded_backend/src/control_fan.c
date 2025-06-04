@@ -65,11 +65,6 @@ int main() {
         return -1;
     }
     
-    if (strcmp(method, "GET") == 0) {
-        handle_get();
-        return 0;
-    }
-    
     if (strcmp(method, "POST") == 0) {
         handle_post();
         return 0;
