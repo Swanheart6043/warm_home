@@ -34,6 +34,10 @@ cJSON* format_array(struct Item list[]) {
 
 int main() {
     const char* method = getenv("REQUEST_METHOD");
+    
+    // 设置HTTP响应头
+    printf("Content-Type: application/json\r\n\r\n");
+
     if (method == NULL) {
         format_response(-1, NULL, false);
         return -1;

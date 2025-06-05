@@ -19,18 +19,20 @@ void* collection_thread() {
     int gyroscope_data = collection_gyroscope();
     int zeebig_data = collection_zeebig();
 
-    // key_t key = ftok("/tmp/env.txt", 65);
-    // int shmid = shmget(key, 512, IPC_CREAT|0666);
-    // char* content = shmat(shmid, NULL, 0);
-    // strcpy(content, "a");
-    // shmdt(content);
     key_t key = ftok("/tmp/env.txt", 65);
-    int msg_id = msgget(key, IPC_CREAT|0666);
-    printf("key: %d\n", key);
-    printf("msg_id: %d\n", msg_id);
-    struct message { long type; char text[5] }msg = { 3, "a" };
-    int result = msgsnd(msg_id, &msg, strlen(msg.text)+1, 0);
-    printf("%s\n", msg.text);
+    int shmid = shmget(key, 512, IPC_CREAT|0666);
+    char* content = shmat(shmid, NULL, 0);
+    strcpy(content, "a");
+    printf("%s\n", content);
+
+    // key_t key = ftok("/tmp/env.txt", 65);
+    // int msg_id = msgget(key, IPC_CREAT|0666);
+    // printf("key: %d\n", key);
+    // printf("msg_id: %d\n", msg_id);
+    // struct message { long type; char text[5] }msg = { 3, "a" };
+    // int result = msgsnd(msg_id, &msg, strlen(msg.text)+1, 0);
+    // printf("%s\n", msg.text);
+    
     printf("sead end\n");
 }
 
