@@ -1,5 +1,5 @@
 import axios from "axios"
-import type { Response, ControlRow, Control } from "./apiType"
+import type { Response, ControlRow, Control, Environmenta } from "./apiType"
 
 export const fetchControlData = async () => {
   const result = await axios.get<Response<Control>>('/cgi-bin/control.cgi')
@@ -27,8 +27,8 @@ export const updateDigitalTube = () => {
 }
 
 export const fetchEnvironmentalData = async () => {
-  await axios.get<{[key: string]: ControlRow[]}, {[key: string]: ControlRow[]}>('/cgi-bin/environment.cgi')
-  return []
+  const result = await axios.get<Response<Environmenta>>('/cgi-bin/environment.cgi')
+  return result.data
 }
 
 export const fetchMonitor = async () => {

@@ -23,12 +23,17 @@ export interface ControlRow {
   checked?: boolean;
 }
 
-export interface PhotoWallItem {
-  key?: string;
+export interface CardProps {
   name?: string;
-  checked?: boolean;
+  count?: number;
 }
 
 export interface Environmenta {
-  da?: number;
+  a9: CardProps[];
+  zeebig: CardProps[];
+}
+
+export interface Photo {
+  key?: string;
+  url?: string;
 }
