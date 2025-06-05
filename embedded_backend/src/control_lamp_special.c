@@ -65,6 +65,9 @@ int main() {
         return -1;
     }
     
+    // 设置HTTP响应头
+    printf("Content-Type: application/json\r\n\r\n");
+
     if (strcmp(method, "POST") == 0) {
         handle_post();
         return 0;

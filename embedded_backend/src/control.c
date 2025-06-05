@@ -13,11 +13,12 @@ struct Item {
 
 cJSON* format_array(struct Item list[]) {
     cJSON *array = cJSON_CreateArray();
+    int i;
     if (array == NULL) {
         return NULL;
     }
     
-    for (int i = 0; i < 4; ++i) {
+    for (i = 0; i < 4; ++i) {
         cJSON *obj = cJSON_CreateObject();
         if (obj == NULL) {
             return NULL;
@@ -33,6 +34,10 @@ cJSON* format_array(struct Item list[]) {
 
 int main() {
     const char* method = getenv("REQUEST_METHOD");
+    
+    // 设置HTTP响应头
+    printf("Content-Type: application/json\r\n\r\n");
+
     if (method == NULL) {
         format_response(-1, NULL, false);
         return -1;

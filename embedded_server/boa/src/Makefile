@@ -20,7 +20,7 @@ CFLAGS = -g -O2 -pipe -Wall
 CPPFLAGS =  -I. -I.
 DEPEND = .depend
 
-CC = gcc 
+CC = arm-none-linux-gnueabi-gcc
 CPP = gcc -E
 
 SOURCES = alias.c boa.c buffer.c cgi.c cgi_header.c config.c escape.c \

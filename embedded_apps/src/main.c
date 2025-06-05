@@ -12,7 +12,7 @@ int main() {
 
     // Create messages
     printf("Message queue preparation\n");
-    int msg_id = msgget(ftok("/tmp", 'g'), IPC_CREAT|IPC_EXCL|0666);
+    int msg_id = msgget(ftok("/tmp/control.txt", 'g'), IPC_CREAT|0666);
     if (msg_id == -1) {
         perror("msgget failed");
         return -1;

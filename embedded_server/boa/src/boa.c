@@ -244,12 +244,12 @@ static void drop_privs(void)
     if (getuid() == 0) {
         struct passwd *passwdbuf;
         passwdbuf = getpwuid(server_uid);
-        if (passwdbuf == NULL) {
-            DIE("getpwuid");
-        }
-        if (initgroups(passwdbuf->pw_name, passwdbuf->pw_gid) == -1) {
-            DIE("initgroups");
-        }
+        // if (passwdbuf == NULL) {
+        //     DIE("getpwuid");
+        // }
+        // if (initgroups(passwdbuf->pw_name, passwdbuf->pw_gid) == -1) {
+        //     DIE("initgroups");
+        // }
         if (setgid(server_gid) == -1) {
             DIE("setgid");
         }

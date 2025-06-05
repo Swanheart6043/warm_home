@@ -7,7 +7,17 @@
 #include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../include/format_response.h"
 
-int handle_post() {
+int main() {
+    const char* method = getenv("REQUEST_METHOD");
+
+    // 设置HTTP响应头
+    printf("Content-Type: application/json\r\n\r\n");
+
+    if (strcmp(method, "POST") != 0) {
+        format_response(-1, NULL, false);
+        return -1;
+    }
+    
     // 获取POST数据长度
     char* content_length_str = getenv("CONTENT_LENGTH");
     int content_length = content_length_str ? atoi(content_length_str) : 0;
@@ -55,14 +65,6 @@ int handle_post() {
     // shu chu
     format_response(2, NULL, true);
     cJSON_Delete(json);
-}
 
-int main() {
-    const char* method = getenv("REQUEST_METHOD");
-    if (strcmp(method, "POST") != 0) {
-        format_response(-1, NULL, false);
-        return -1;
-    }
-    handle_post();
     return 0;
 }

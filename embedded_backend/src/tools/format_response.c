@@ -17,9 +17,6 @@ int format_response(int code, cJSON *data_obj, bool success) {
     
     cJSON_AddBoolToObject(root, "success", success);
 
-    // 设置HTTP响应头
-    printf("Content-Type: application/json\r\n\r\n");
-
     // shuchu JSON字符串
     char *json_str = cJSON_PrintUnformatted(root);
     if (json_str) {
