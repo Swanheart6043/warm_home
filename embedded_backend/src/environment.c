@@ -8,6 +8,32 @@
 #include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../include/format_response.h"
 
+typedef struct {
+    float CYROX;
+    float CYROY;
+    float CYROZ;
+    float AACX;
+    float AACY;
+    float AACZ;
+} Mpu6050Data;
+
+typedef struct {
+    float A9_RESERVED_0;
+    float A9_RESERVED_1;
+} ReservedData;
+
+typedef struct {
+    float temperature;
+    float humidity;
+} ZeeBigData;
+
+typedef struct {
+    float adc;
+    Mpu6050Data base1;
+    ReservedData base2;
+    ZeeBigData base3;
+} RequestData;
+
 struct Item {
     char* name;
     float count;
@@ -50,22 +76,22 @@ int main() {
     int shmid = shmget(key, 512, 0666);
     char* content = shmat(shmid, NULL, 0);
     // bzero(content,512);
+    printf("%s\n", ((RequestData*)content)->adc);
     // cJSON* json_string  = cJSON_CreateString(content);
-    
     struct Item a9_list[9] = {
-        { 'Adc', 9.00 },
-        { 'CYROX', -14 },
-        { 'CYROY', 20 },
-        { 'CYROZ', 40 },
-        { 'AACX', 642 },
-        { 'AACY', -34 },
-        { 'AACZ', 5002 },
-        { 'A9-RESERVED-0', 0 },
-        { 'A9-RESERVED-1', 0 },
+        { "Adc", 9.00 },
+        { "CYROX", -14 },
+        { "CYROY", 20 },
+        { "CYROZ", 40 },
+        { "AACX", 642 },
+        { "AACY", -34 },
+        { "AACZ", 5002 },
+        { "A9-RESERVED-0", 0 },
+        { "A9-RESERVED-1", 0 },
     };
     struct Item zeebig_list[2] = {
-        { name: 'Temperature', count: 10.00 },
-        { name: 'Humidity', count: 20.00 },
+        { "Temperature", 10.00 },
+        { "Humidity", 20.00 },
     };
     cJSON* a9 = format_array(a9_list);
     cJSON* zeebig = format_array(zeebig_list);
@@ -75,5 +101,6 @@ int main() {
     cJSON_AddItemToObject(data, "zeebig", zeebig);
     
     format_response(0, data, true);
+    shmdt(shmid);
     return 0;
 }

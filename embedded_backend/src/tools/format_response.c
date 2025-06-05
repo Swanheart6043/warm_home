@@ -5,7 +5,7 @@
 
 int format_response(int code, cJSON *data_obj, bool success) {
     cJSON *root = cJSON_CreateObject();
-    
+
     if (!root) {
         fprintf(stderr, "Failed to create JSON root\n");
         return -1;
@@ -13,7 +13,11 @@ int format_response(int code, cJSON *data_obj, bool success) {
 
     cJSON_AddNumberToObject(root, "code", code);
     
-    data_obj ? cJSON_AddItemToObject(root, "data", data_obj) : cJSON_AddNullToObject(root, "data");
+    if (data_obj) {
+        cJSON_AddItemToObject(root, "data", data_obj);
+    } else {
+        cJSON_AddNullToObject(root, "data");
+    }
     
     cJSON_AddBoolToObject(root, "success", success);
 
