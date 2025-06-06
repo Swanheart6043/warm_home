@@ -11,7 +11,7 @@ CC = gcc
 
 OTHER_HEADERS = ../../mjpg_streamer.h ../../utils.h ../output.h ../input.h
 
-CFLAGS += -O1 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC
+CFLAGS += -O1 -DLINUX -D_GNU_SOURCE -Wall -shared -fPIC -I /home/swanheart/jpegarm/include
 
 #CFLAGS += -g
 #CFLAGS += -DDEBUG
@@ -30,7 +30,7 @@ clean:
 	rm -f *.a *.o core *~ *.so *.lo
 
 input_uvc.so: $(OTHER_HEADERS) input_uvc.c v4l2uvc.lo jpeg_utils.lo dynctrl.lo
-	$(CC) $(CFLAGS) -o $@ input_uvc.c v4l2uvc.lo jpeg_utils.lo dynctrl.lo $(LFLAGS)
+	$(CC) $(CFLAGS) -L /home/swanheart/jpegarm/lib -o $@ input_uvc.c v4l2uvc.lo jpeg_utils.lo dynctrl.lo $(LFLAGS)
 
 v4l2uvc.lo: huffman.h uvc_compat.h v4l2uvc.c v4l2uvc.h
 	$(CC) -c $(CFLAGS) -o $@ v4l2uvc.c
