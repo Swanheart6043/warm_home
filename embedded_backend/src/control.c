@@ -17,7 +17,6 @@ cJSON* format_array(struct Item list[]) {
     if (array == NULL) {
         return NULL;
     }
-    
     for (i = 0; i < 4; ++i) {
         cJSON *obj = cJSON_CreateObject();
         if (obj == NULL) {
@@ -28,7 +27,6 @@ cJSON* format_array(struct Item list[]) {
         cJSON_AddBoolToObject(obj, "checked", list[i].checked);
         cJSON_AddItemToArray(array, obj);
     }
-
     return array;
 }
 
@@ -84,6 +82,5 @@ int main() {
     // cJSON_AddItemToObject(data, "fan", fan);
     // cJSON_AddItemToObject(data, "digitalTube", digital_tube);
     format_response(0, data, true);
-
     return 0;
 }

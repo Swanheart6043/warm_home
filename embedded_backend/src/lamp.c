@@ -9,10 +9,8 @@
 
 int main() {
     const char* method = getenv("REQUEST_METHOD");
-
     // 设置HTTP响应头
     printf("Content-Type: application/json\r\n\r\n");
-
     if (strcmp(method, "POST") != 0) {
         format_response(-1, NULL, false);
         return -1;
@@ -25,7 +23,6 @@ int main() {
         format_response(-1, NULL, false);
         return -1;
     }
-
     // 读取POST数据
     char* input = (char *)malloc(content_length + 1);
     if (input == NULL) {
@@ -42,7 +39,6 @@ int main() {
         format_response(-1, NULL, false);
         return -1;
     }
-
     // 处理具体的命令
     cJSON *operate = cJSON_GetObjectItemCaseSensitive(json, "operate");
     if (!cJSON_IsString(operate)) {
@@ -50,21 +46,23 @@ int main() {
         return -1;
     }
 
-    // tong zhi app
+    // send msg
     key_t key = ftok("/tmp", 'g');
     int msgid = msgget(key, IPC_CREAT|0666);
-    if (msgid < 0) {
-        perror("msgget");
+    if (key == -1 || msgid == -1) {
+        format_response(-1, cJSON_CreateString("fu wu qi yi chang"), false);
+        cJSON_Delete(json);
+        return -1;
     }
-    struct message { long type; char text[100] }msg = { 1, "on 1" };
+    struct message { long type; char text[5] } msg = { 2, "on 1" };
     int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
     if (result < 0) {
-        perror("msgsnd");
+        format_response(-1, cJSON_CreateString("fu wu qi yi chang"), false);
+        cJSON_Delete(json);
+        return -1;
     }
     
-    // shu chu
-    format_response(2, NULL, true);
+    format_response(0, cJSON_CreateString("fu wu qi yi chang"), true);
     cJSON_Delete(json);
-
     return 0;
 }
