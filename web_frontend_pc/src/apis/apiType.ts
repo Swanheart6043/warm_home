@@ -23,6 +23,11 @@ export interface ControlRow {
   checked?: boolean;
 }
 
+export interface ControlRequest {
+  operate: string;
+  whichLed: number;
+}
+
 export interface CardProps {
   name?: string;
   count?: number;
@@ -33,7 +38,3 @@ export interface Environmenta {
   zeebig: CardProps[];
 }
 
-export interface Photo {
-  key?: string;
-  url?: string;
-}

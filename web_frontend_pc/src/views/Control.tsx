@@ -1,6 +1,6 @@
 import { message, Switch, Table, type TableProps } from "antd"
 import { useEffect, useState } from "react";
-import { fetchControlData, updateLamp } from "../apis/api";
+import { fetchControlData, updateDigitalTube, updateFan, updateLamp, updateSpeakers } from "../apis/api";
 import type { ControlRow } from "../apis/apiType";
 
 export const Control = () => {
@@ -22,21 +22,31 @@ export const Control = () => {
   }, [])
 
   const handleLampChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateLamp({operate: 'on', whichLed: 1})
+    const result = await updateLamp({ operate: 'on', whichLed: 1 })
     if (!result.success) return
     messageApi.success("操作成功")
-    setListForLamp((newList) => {
-      return newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked }))
-    })
+    setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
-  const handleSpeakersChange = (row: ControlRow) => (value: boolean) => {
-    row.checked = value
+
+  const handleSpeakersChange = (row: ControlRow) => async (value: boolean) => {
+    const result = await updateSpeakers({ operate: 'on', whichLed: 1 })
+    if (!result.success) return
+    messageApi.success("操作成功")
+    setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
-  const handleFanChange = (row: ControlRow) => (value: boolean) => {
-    row.checked = value
+  
+  const handleFanChange = (row: ControlRow) => async (value: boolean) => {
+    const result = await updateFan({ operate: 'on', whichLed: 1 })
+    if (!result.success) return
+    messageApi.success("操作成功")
+    setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
-  const handleDigitalTubeChange = (row: ControlRow) => (value: boolean) => {
-    row.checked = value
+  
+  const handleDigitalTubeChange = (row: ControlRow) => async (value: boolean) => {
+    const result = await updateDigitalTube({ operate: 'on', whichLed: 1 })
+    if (!result.success) return
+    messageApi.success("操作成功")
+    setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
 
   const columnsForLamp: TableProps<ControlRow>['columns'] = [
