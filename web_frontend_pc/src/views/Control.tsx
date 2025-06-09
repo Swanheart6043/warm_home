@@ -22,7 +22,11 @@ export const Control = () => {
   }, [])
 
   const handleLampChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateLamp({ operate: 'on', whichLed: 1 })
+    if (!row.key) {
+      console.error("row.key不能为空");
+      return;
+    }
+    const result = await updateLamp({ operate: 'on', whichLed: Number(row.key) })
     if (!result.success) return
     messageApi.success("操作成功")
     setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
