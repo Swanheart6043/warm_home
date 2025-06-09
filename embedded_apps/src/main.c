@@ -8,7 +8,6 @@ int main() {
     pthread_t led_tid;
     pthread_t buzzer_tid;
     pthread_t collection_tid;
-    pthread_t camera_tid;
 
     // Create messages
     printf("Message queue preparation\n");
@@ -23,10 +22,6 @@ int main() {
     int collection_thread_result = pthread_create(&collection_tid, NULL, (void*)collection_thread, NULL);
     if (collection_thread_result != 0) {
         perror("Failed to create collection thread");
-    }
-    int camera_thread_result = pthread_create(&camera_tid, NULL, (void*)camera_thread, NULL);
-    if (camera_thread_result != 0) {
-        perror("Failed to create camera thread");
     }
     
     printf("App started, waiting commands...\n");    

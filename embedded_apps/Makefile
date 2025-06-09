@@ -6,7 +6,7 @@ BUILD_DIR = build
 TARGET = $(BUILD_DIR)/app
 
 # 搜索 src 目录下所有 .c 文件
-SRCS = $(wildcard $(SRC_DIR)/*.c)
+SRCS = $(wildcard $(SRC_DIR)/*.c) 
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(BUILD_DIR)/%.o, $(SRCS))
 
 # 默认目标
