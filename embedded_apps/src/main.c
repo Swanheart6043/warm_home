@@ -26,51 +26,35 @@ void match_msg(long type, MessageBody body) {
             led_thread_running = 0;
         }
         int led_thread_result = pthread_create(&led_tid, NULL, (void*)led_thread, NULL);
-        if (led_thread_result == 0) {
-            printf ("Led thread started\n");
-            led_thread_running = 1;
-        } else {
-            perror("Failed to create led thread");
-        }
+        if (led_thread_result == -1) perror("Failed to create led thread");
+        printf ("Led thread started\n");
+        led_thread_running = 1;
+        return;
     }
+
     if (type == 2) {
-        if (buzzer_tid) {
-            pthread_join(buzzer_tid, NULL);
+        if (buzzer_thread_running) {
+            printf("Stopping buzzer thread\n");
+            pthread_join(buzzer_tid, body.operate);
+            buzzer_thread_running = 0;
         }
         int buzzer_thread_result = pthread_create(&buzzer_tid, NULL, (void*)buzzer_thread, NULL);
-        if (buzzer_thread_result != 0) {
-            perror("Failed to create buzzer thread");
-        }
+        if (buzzer_thread_result == -1) perror("Failed to create buzzer thread");
         printf ("pthread buzzer end\n");
+        buzzer_thread_running = 1;
+        return;
     }
+
     if (type == 3) {
-        if (led_thread_running) {
-            printf("Stopping led thread\n");
-            pthread_join(led_tid, body.operate);
-            led_thread_running = 0;
-        }
-        int led_thread_result = pthread_create(&led_tid, NULL, (void*)led_thread, NULL);
-        if (led_thread_result == 0) {
-            printf ("Led thread started\n");
-            led_thread_running = 1;
-        } else {
-            perror("Failed to create led thread");
-        }
+        fan();
+        return;
     }
+
     if (type == 4) {
-        if (led_thread_running) {
-            printf("Stopping led thread\n");
-            pthread_join(led_tid, body.operate);
-            led_thread_running = 0;
-        }
-        int led_thread_result = pthread_create(&led_tid, NULL, (void*)led_thread, NULL);
-        if (led_thread_result == 0) {
-            printf ("Led thread started\n");
-            led_thread_running = 1;
-        } else {
-            perror("Failed to create led thread");
-        }
+        digital_tube();
+        return;
     }
+    return;
 }
 
 int main() {
@@ -86,12 +70,7 @@ int main() {
     while(1) {
         Message msg;
         msgrcv(msg_id, &msg, sizeof(msg.body), 0, 0);
-        if (msg.type) {
-            printf("msgrcv type: %ld\n", msg.type);
-            printf("msgrcv operate: %s\n", msg.body.operate);
-            printf("msgrcv which: %d\n", msg.body.which);
-        }
-        // match_msg(msg.type, msg.body);
+        match_msg(msg.type, msg.body);
         usleep(10000);
     }
 

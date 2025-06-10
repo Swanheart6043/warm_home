@@ -15,11 +15,6 @@ void* led_thread(char* params) {
 	printf("Led thread preparation\n");
     long threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
-	// pthread_detach(threadId);
-    // pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
-    // pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
-    // pthread_cleanup_push(handleClean, "hello");
-    // pthread_cleanup_pop(1);
 
 	int fd = -1;
 	int is_on = 0;
@@ -54,6 +49,6 @@ void* led_thread(char* params) {
     pthread_exit(NULL);
 }
 
-void* digital_tube_thread(char* params) {
+void digital_tube_thread(char* params) {
 
 }

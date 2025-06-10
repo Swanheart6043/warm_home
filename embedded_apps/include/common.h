@@ -1,10 +1,5 @@
 void* led_thread();
 void* buzzer_thread();
-void* fan_thread();
-void* digital_tube_thread();
-void* camera_thread();
-void* adc_thread();
-void* accelerator_thread();
-void* gyroscope_thread();
+void fan();
+void digital_tube();
 void* collection_thread();
-void* camera_thread();
