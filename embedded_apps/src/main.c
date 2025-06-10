@@ -33,11 +33,14 @@ int main() {
         int led_thread_running = 0;
         int buzzer_thread_running = 0;
         
-        // Handle or create temp threads
         if (msg.type == 1) {
+            pthread_join(led_tid, msg.text);
+            led_thread_running = 0;
+        }
+        if (msg.type == 2) {
             if (led_thread_running) {
                 printf("Stopping led thread\n");
-                pthread_join(led_tid, NULL);
+                pthread_join(led_tid, msg.text);
                 led_thread_running = 0;
             }
             int led_thread_result = pthread_create(&led_tid, NULL, (void*)led_thread, NULL);
@@ -48,8 +51,7 @@ int main() {
                 perror("Failed to create led thread");
             }
         }
-        
-        if (msg.type == 2) {
+        if (msg.type == 3) {
             if (buzzer_tid) {
                 pthread_join(buzzer_tid, NULL);
             }
@@ -59,18 +61,14 @@ int main() {
             }
             printf ("pthread buzzer end\n");
         }
-
-        if (msg.type == 3) {
-
-        }
-
         if (msg.type == 4) {
 
         }
-        
+        if (msg.type == 5) {
+
+        }
         // 短暂休眠10ms，避免CPU占用过高
         usleep(10000);
     }
-
     return 0;
 }

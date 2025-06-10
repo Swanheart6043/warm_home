@@ -27,25 +27,19 @@ cJSON* format_array(Item list[], int length) {
 }
 
 int main() {
-    // 设置HTTP响应头
     printf("Content-Type: application/json\r\n\r\n");
-
     const int method = getenv("REQUEST_METHOD");
-    if (method == 0) {
-        format_response(-1, NULL, false);
+    if (method == 0 || strcmp(method, "GET") != 0) {
+        format_response(-1, cJSON_CreateString("请求方式错误"), false);
         return -1;
     }
-    // if (strcmp(method, "GET") != 0) {
-    //     format_response(-1, NULL, false);
-    //     return -1;
-    // }
     
     // int msg_id = msgget(ftok("/tmp", 'g'), 0666 | IPC_CREAT);
     // if (msg_id < 0) {
     //     perror("msgget");
     //     return -1;
     // }
-    // struct message { long type; char text[5] }msg = { 1, "read" };
+    // struct message { long type; char text[5] } msg = { 1, "read" };
     // int result = msgsnd(msg_id, &msg, strlen(msg.text)+1, 0);
     // if (result < 0) {
     //     perror("msgsnd");
@@ -53,10 +47,10 @@ int main() {
     // }
     
     Item lamp_list[4] = {
-        { 1, "led1", false }, 
-        { 2, "led2", false }, 
-        { 3, "led3", false }, 
-        { 4, "led4", false }
+        { 1, "灯1", false }, 
+        { 2, "灯2", false }, 
+        { 3, "灯3", false }, 
+        { 4, "灯4", false }
     };
     Item speaker_list[1] = {
         { 1, "音箱", false }, 
