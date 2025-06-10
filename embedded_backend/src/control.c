@@ -70,6 +70,7 @@ int main() {
     cJSON* speaker = format_array(speaker_list, speaker_list_length);
     cJSON* fan = format_array(fan_list, fan_list_length);
     cJSON* digital_tube = format_array(digital_tube_list, digital_tube_list_length);
+    
     cJSON* data = cJSON_CreateObject();
     cJSON_AddItemToObject(data, "lamp", lamp);
     cJSON_AddItemToObject(data, "speakers", speaker);
