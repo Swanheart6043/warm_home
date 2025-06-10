@@ -7,17 +7,23 @@
 #include <sys/msg.h>
 #include "../../embedded_common/include/led.h"
 
-void* fan_thread(char* params) {
-    printf("Buzzer thread preparation\n");
+void fan(char* params) {
+    printf("Led thread preparation\n");
     long threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
 
-    int fd = -1;
+	int fd = -1;
 	int is_on = 0;
+	int which_led = 0;
 
 	if(!params) {
 		printf("The parameter is invalid\n");
 		return 1;
+	}
+
+	if (which_led < 2 || which_led > 5) {
+		printf("Led number is invalid\n");
+		return 2;
 	}
 
 	fd = open("/dev/led", O_RDONLY);
@@ -26,10 +32,15 @@ void* fan_thread(char* params) {
 		return 3;
 	}
 
-    is_on ? ioctl(fd, LED_ON) : ioctl(fd, LED_OFF);
+	if (is_on) {
+		ioctl(fd, LED_ON, which_led);
+	} else {
+		ioctl(fd, LED_OFF, which_led);
+	}
 
 	close(fd);
 	fd = -1;
 
-	pthread_exit(NULL);
+	// 相当于return，但是推荐用exit这个函数;
+    pthread_exit(NULL);
 }

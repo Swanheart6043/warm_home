@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 #include <stdbool.h>
-#include <sys/msg.h>
+#include <string.h>
 #include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../include/format_response.h"
 
@@ -28,8 +28,12 @@ cJSON* format_array(Item list[], int length) {
 
 int main() {
     printf("Content-Type: application/json\r\n\r\n");
-    const int method = getenv("REQUEST_METHOD");
-    if (method == 0 || strcmp(method, "GET") != 0) {
+    const char* method = getenv("REQUEST_METHOD");
+    if (method == NULL) {
+        format_response(-1, cJSON_CreateString("请求方式错误"), false);
+        return -1;
+    }
+    if (strcmp(method, "GET") != 0) {
         format_response(-1, cJSON_CreateString("请求方式错误"), false);
         return -1;
     }
@@ -70,6 +74,7 @@ int main() {
     cJSON* speaker = format_array(speaker_list, speaker_list_length);
     cJSON* fan = format_array(fan_list, fan_list_length);
     cJSON* digital_tube = format_array(digital_tube_list, digital_tube_list_length);
+    
     cJSON* data = cJSON_CreateObject();
     cJSON_AddItemToObject(data, "lamp", lamp);
     cJSON_AddItemToObject(data, "speakers", speaker);

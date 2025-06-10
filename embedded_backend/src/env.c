@@ -1,38 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
-#include <stdbool.h>
 #include <sys/shm.h>
-#include <string.h>
 #include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../include/format_response.h"
-
-typedef struct {
-    float CYROX;
-    float CYROY;
-    float CYROZ;
-    float AACX;
-    float AACY;
-    float AACZ;
-} Mpu6050Data;
-
-typedef struct {
-    float A9_RESERVED_0;
-    float A9_RESERVED_1;
-} ReservedData;
-
-typedef struct {
-    float temperature;
-    float humidity;
-} ZeeBigData;
-
-typedef struct {
-    float adc;
-    Mpu6050Data base1;
-    ReservedData base2;
-    ZeeBigData base3;
-} RequestData;
+#include "../../embedded_common/include/shared_memory.h"
 
 typedef struct {
     char* name;
