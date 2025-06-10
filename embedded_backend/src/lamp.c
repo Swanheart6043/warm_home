@@ -6,6 +6,7 @@
 #include <sys/msg.h>
 #include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../include/format_response.h"
+#include "../../embedded_common/include/message.h"
 
 int main() {
     printf("Content-Type: application/json\r\n\r\n");
@@ -41,24 +42,36 @@ int main() {
         return -1;
     }
     // 处理具体的命令
-    cJSON *operate = cJSON_GetObjectItemCaseSensitive(json, "operate");
-    if (!cJSON_IsString(operate)) {
+    cJSON *operate = cJSON_GetObjectItemCaseSensitive(json, "operate"); 
+    cJSON *whichLed = cJSON_GetObjectItemCaseSensitive(json, "whichLed");
+    // format_response(-1, cJSON_CreateString(operate), false);
+    // cJSON_Delete(json);
+    // return -1;
+    
+    if (!cJSON_IsString(operate) || !cJSON_IsString(whichLed)) {
         format_response(-1, cJSON_CreateString("服务器异常"), false);
         cJSON_Delete(json);
         return -1;
     }
 
     // 通知应用层
-    key_t key = ftok("/tmp", 'g');
+    key_t key = ftok("/tmp/control.txt", 'g');
     int msgid = msgget(key, IPC_CREAT|0666);
     if (key == -1 || msgid == -1) {
-        format_response(-1, cJSON_CreateString("服务器异常"), false);
+        format_response(-11, cJSON_CreateString("服务器异常"), false);
         cJSON_Delete(json);
         return -1;
     }
-    struct message { long type; char text[5] } msg = { 2, "on 1" };
-    int result = msgsnd(msgid, &msg, strlen(msg.text)+1, 0);
-    if (result < 0) {
+    MessageBody body = {
+        .operate = operate,
+        .which = whichLed,
+    };
+    Message msg = { 
+        .type = 1,
+        .body = body
+    };
+    int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
+    if (result == -1) {
         format_response(-1, cJSON_CreateString("服务器异常"), false);
         cJSON_Delete(json);
         return -1;

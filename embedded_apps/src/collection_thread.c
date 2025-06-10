@@ -55,7 +55,7 @@ void collection_thread() {
     key_t key = ftok("/tmp/env.txt", 65);
     int shmid = shmget(key, 512, IPC_CREAT|0666);
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
-    // bzero(content,512);
+    bzero(content,512);
     strcpy(content, &requestParams);
     
     content->adc = adc_data;

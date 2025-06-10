@@ -73,7 +73,7 @@ int main() {
         return -1;
     }
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
-    // bzero(content,512);
+    bzero(content,512);
     Item a9_list[9] = {
         { "Adc", content->adc },
         { "CYROX", content->base1.CYROX },
