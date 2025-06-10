@@ -1,0 +1,44 @@
+.home {
+  height: calc(100% + 48px);
+  background: #081325 url(/interact.png) top;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  margin: -24px;
+  div {
+    box-sizing: border-box;
+  }
+
+  .head{
+    width:100%;
+    height:74px;
+    text-align: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    h3{
+      line-height: 74px;
+      font-size: 2.5vw;
+      font-weight: 800;
+      color:#fff;
+    }
+    margin-bottom: 20px;
+  }
+
+  .body{
+    flex: 1;
+    box-sizing: border-box;
+    position: relative;
+    .leftAndRightArea {
+      position: absolute;
+      top: 0;
+      width: 23%;
+      height: calc(100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+  }
+}
