@@ -1,38 +1,11 @@
-// #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
-#include <sys/msg.h>
 #include <sys/shm.h>
 #include <string.h>
 #include <pthread.h>
 #include "../../embedded_common/lib/cjson/cJSON.h"
-
-typedef struct {
-    float CYROX;
-    float CYROY;
-    float CYROZ;
-    float AACX;
-    float AACY;
-    float AACZ;
-} Mpu6050Data;
-
-typedef struct {
-    float A9_RESERVED_0;
-    float A9_RESERVED_1;
-} ReservedData;
-
-typedef struct {
-    float temperature;
-    float humidity;
-} ZeeBigData;
-
-typedef struct {
-    float adc;
-    Mpu6050Data base1;
-    ReservedData base2;
-    ZeeBigData base3;
-} RequestData;
+#include "../../embedded_common/include/shared_memory.h"
 
 void collection_thread();
 float get_adc();

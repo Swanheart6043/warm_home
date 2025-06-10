@@ -13,7 +13,7 @@ void match_msg(long type, MessageBody body) {
     if (!type) return;
     
     printf("msgrcv type: %ld\n", type);
-    printf("msgrcv operate: %ld\n", body.operate);
+    printf("msgrcv operate: %s\n", body.operate);
     printf("msgrcv which: %ld\n", body.which);
     
     int led_thread_running = 0;
@@ -78,19 +78,22 @@ int main() {
     int msg_id = msgget(key, IPC_CREAT|0666);
     if (key == -1 || msg_id == -1) perror("msgget failed");
     
-    // Create some resident thread
     int collection_thread_result = pthread_create(&collection_tid, NULL, (void*)collection_thread, NULL);
     if (collection_thread_result == -1) perror("Failed to create collection thread");
     
     printf("App started, waiting commands...\n");
 
-    // Listen messages
     while(1) {
         Message msg;
         msgrcv(msg_id, &msg, sizeof(msg.body), 0, 0);
-        match_msg(msg.type, msg.body);
-        // 短暂休眠10ms，避免CPU占用过高
+        if (msg.type) {
+            printf("msgrcv type: %ld\n", msg.type);
+            printf("msgrcv operate: %s\n", msg.body.operate);
+            printf("msgrcv which: %d\n", msg.body.which);
+        }
+        // match_msg(msg.type, msg.body);
         usleep(10000);
     }
+
     return 0;
 }

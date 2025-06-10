@@ -1,5 +1,5 @@
 typedef struct {
-    char* operate;
+    char operate[5];
     unsigned short which;
 } MessageBody;
 

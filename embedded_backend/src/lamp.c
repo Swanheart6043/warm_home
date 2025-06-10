@@ -42,13 +42,14 @@ int main() {
         return -1;
     }
     // 处理具体的命令
-    cJSON *operate = cJSON_GetObjectItemCaseSensitive(json, "operate"); 
+    cJSON *operate = cJSON_GetObjectItemCaseSensitive(json, "operate");
     cJSON *whichLed = cJSON_GetObjectItemCaseSensitive(json, "whichLed");
-    // format_response(-1, cJSON_CreateString(operate), false);
-    // cJSON_Delete(json);
-    // return -1;
-    
-    if (!cJSON_IsString(operate) || !cJSON_IsString(whichLed)) {
+    if (!cJSON_IsString(operate)) {
+        format_response(-1, cJSON_CreateString("服务器异常"), false);
+        cJSON_Delete(json);
+        return -1;
+    }
+    if (!cJSON_IsNumber(whichLed)) {
         format_response(-1, cJSON_CreateString("服务器异常"), false);
         cJSON_Delete(json);
         return -1;
@@ -62,14 +63,11 @@ int main() {
         cJSON_Delete(json);
         return -1;
     }
-    MessageBody body = {
-        .operate = operate,
-        .which = whichLed,
-    };
-    Message msg = { 
-        .type = 1,
-        .body = body
-    };
+    MessageBody body;
+    strncpy(body.operate, operate->valuestring, sizeof(body.operate) - 1);
+    body.operate[sizeof(body.operate) - 1] = '\0';
+    body.which = whichLed->valueint;
+    Message msg = { .type = 1, .body = body };
     int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
     if (result == -1) {
         format_response(-1, cJSON_CreateString("服务器异常"), false);
