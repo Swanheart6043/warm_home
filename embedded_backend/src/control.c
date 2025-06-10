@@ -59,7 +59,7 @@ int main() {
         { 1, "风扇", false }, 
     };
     Item digital_tube_list[1] = {
-        { 1, "数码管", false },
+        { 1, "电子钟", false },
     };
     int lamp_list_length = sizeof(lamp_list) / sizeof(lamp_list[0]);
     int speaker_list_length = sizeof(speaker_list) / sizeof(speaker_list[0]);
