@@ -8,7 +8,6 @@
 #include "../include/format_response.h"
 
 int main() {
-    // 设置HTTP响应头
     printf("Content-Type: application/json\r\n\r\n");
 
     const char* method = getenv("REQUEST_METHOD");
