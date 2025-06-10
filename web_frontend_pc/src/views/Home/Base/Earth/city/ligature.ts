@@ -1,7 +1,7 @@
 import { Vector3, Float32BufferAttribute, Group, Color, BufferGeometry, CubicBezierCurve3, Line, LineBasicMaterial } from 'three'
 
 import { lglt2xyz, getCubicBezierCenterPoint } from '../utils'
-import { ICityList, IflyData } from '../type';
+import type { ICityList, IflyData } from '../type';
 
 export const createCityLigature = (cityList: ICityList, relationList: IflyData[]) => {
   const cityLineArr = new Group()

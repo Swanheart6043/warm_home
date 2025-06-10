@@ -8,7 +8,7 @@ import { createEarthOutLine } from './outLine'
 import { createCityPoints } from '../city/cityPoint';
 import { createCityLight } from '../city/cityLight'
 import { createCityLigature } from '../city/ligature'
-import { ICityList, IflyData } from '../type'
+import type { ICityList, IflyData } from '../type';
 import { createFlyLine } from './flyline'
 import { GlobalConfig } from '../config';
 import { InitFlyLine } from '../city/flyLine'

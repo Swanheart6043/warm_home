@@ -11,7 +11,7 @@ import {
 import biaozhu from '../../assets/images/biaozhu.png'
 import bzguangquan from '../../assets/images/bzguangquan.png'
 import { lglt2xyz } from '../utils';
-import { ICityList } from '../type';
+import type { ICityList } from '../type';
 import { GlobalConfig } from '../config';
 
 

@@ -2,7 +2,7 @@ import { TextureLoader, Texture, PlaneGeometry, MeshBasicMaterial, Mesh, DoubleS
 import biaozhu from '../../assets/images/biaozhu.png'
 import guangzhu from '../../assets/images/guangzhu.png'
 import { lglt2xyz } from '../utils'
-import { ICityList } from '../type'
+import type { ICityList } from '../type'
 import { GlobalConfig } from '../config'
 
 

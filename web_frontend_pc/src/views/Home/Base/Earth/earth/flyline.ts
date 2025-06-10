@@ -2,7 +2,7 @@ import { Object3D, Vector3, CubicBezierCurve3 } from 'three'
 import { InitFlyLine } from '../city/flyLine'
 import pointPng from "../../assets/images/point.png";
 import { lglt2xyz, getCubicBezierCenterPoint } from '../utils';
-import { ICity, IflyData, ICityList } from '../type';
+import type { ICity, IflyData, ICityList } from '../type';
 import { GlobalConfig } from '../config';
 
 export const createFlyLine = (earthObj: Object3D, cityList: ICityList, relationList: IflyData[]) => {

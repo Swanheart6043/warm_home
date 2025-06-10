@@ -8,7 +8,7 @@ import {
   Vector3,
   Color,
 } from "three";
-import { IAddFly } from '../type'
+import type { IAddFly } from '../type';
 
 
 export class InitFlyLine {

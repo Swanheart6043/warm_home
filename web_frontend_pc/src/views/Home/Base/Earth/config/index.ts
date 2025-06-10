@@ -1,4 +1,4 @@
-import { IEarthConfig } from '../type'
+import type { IEarthConfig } from '../type'
 
 export class GlobalConfig {
   static earthRadius: number = 300

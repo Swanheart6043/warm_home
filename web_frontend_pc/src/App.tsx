@@ -5,7 +5,7 @@ import { Avatar, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import logo from '/react.svg'
 import defaultAvatar from './assets/default-avatar.png'
-import { Home } from './views/Home';
+import { Home } from './views/Home/index';
 import { Environmental } from './views/Environmental';
 import { PhotoWall } from './views/PhotoWall';
 import { Monitor } from './views/Monitor';
@@ -15,6 +15,11 @@ function App() {
   const nav = useNavigate()
 
   const items: Required<MenuProps>['items'][number][] = [
+     {
+      key: 'home',
+      label: '首页',
+      icon: <WindowsOutlined />,
+    },
     {
       key: 'control',
       label: '硬件控制',
