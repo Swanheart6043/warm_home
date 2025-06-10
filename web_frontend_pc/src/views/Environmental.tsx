@@ -42,11 +42,10 @@ export const Environmental = () => {
   return (
     <div style={{ height: '100%', padding: '20px' }}>
       <div style={{ backgroundColor: '#8982fa', padding: '20px', marginBottom: '20px' }}>
-        <div style={{ marginBottom: '5px' }}>
+        <div style={{ marginBottom: '10px' }}>
           A9
         </div>
-        
-        <div style={{ display: 'flex', gap: '24px', marginBottom: '20px' }}>
+        <div>
           <Card name={a9List[0]?.name} count={a9List[0]?.count} />
           <Card name={a9List[1]?.name} count={a9List[1]?.count} />
           <Card name={a9List[2]?.name} count={a9List[2]?.count} />
@@ -54,19 +53,16 @@ export const Environmental = () => {
           <Card name={a9List[4]?.name} count={a9List[4]?.count} />
           <Card name={a9List[5]?.name} count={a9List[5]?.count} />
           <Card name={a9List[6]?.name} count={a9List[6]?.count} />
-        </div>
-
-        <div style={{ display: 'flex', gap: '24px' }}>
           <Card name={a9List[7]?.name} count={a9List[7]?.count} />
           <Card name={a9List[8]?.name} count={a9List[8]?.count} />
         </div>
       </div>
 
       <div style={{ backgroundColor: '#8982fa', padding: '20px' }}>
-        <div style={{ marginBottom: '5px' }}>
+        <div style={{ marginBottom: '10px' }}>
           ZeeBig
         </div>
-        <div style={{ display: 'flex', gap: '24px' }}>
+        <div>
           {zeebigList.map((item) => <Card name={item.name} count={item.count} />)}
         </div>
       </div>
