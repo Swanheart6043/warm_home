@@ -34,20 +34,15 @@ typedef struct {
     ZeeBigData base3;
 } RequestData;
 
-struct Item {
+typedef struct {
     char* name;
     float count;
-};
+} Item;
 
-cJSON* format_array(struct Item list[]) {
-    cJSON *array = cJSON_CreateArray();
-    
+cJSON* format_array(Item list[], int length) {
     int i;
-    int length = sizeof(list) / sizeof(struct Item);
-    if (array == NULL) {
-        return NULL;
-    }
-    
+    cJSON *array = cJSON_CreateArray();
+    if (array == NULL) return NULL;
     for (i = 0; i < length; ++i) {
         cJSON *obj = cJSON_CreateObject();
         if (obj == NULL) return NULL;
@@ -55,7 +50,6 @@ cJSON* format_array(struct Item list[]) {
         cJSON_AddNumberToObject(obj, "count", list[i].count);
         cJSON_AddItemToArray(array, obj);
     }
-
     return array;
 }
 
@@ -74,33 +68,37 @@ int main() {
     
     key_t key = ftok("/tmp/env.txt", 65);
     int shmid = shmget(key, 512, 0666);
-    char* content = shmat(shmid, NULL, 0);
+    if (key == -1 || shmid == -1) {
+        format_response(-1, NULL, false);
+        return -1;
+    }
+    RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
     // bzero(content,512);
-    printf("%s\n", ((RequestData*)content)->adc);
-    // cJSON* json_string  = cJSON_CreateString(content);
-    struct Item a9_list[9] = {
-        { "Adc", 9.00 },
-        { "CYROX", -14 },
-        { "CYROY", 20 },
-        { "CYROZ", 40 },
-        { "AACX", 642 },
-        { "AACY", -34 },
-        { "AACZ", 5002 },
-        { "A9-RESERVED-0", 0 },
-        { "A9-RESERVED-1", 0 },
+    Item a9_list[9] = {
+        { "Adc", content->adc },
+        { "CYROX", content->base1.CYROX },
+        { "CYROY", content->base1.CYROX },
+        { "CYROZ", content->base1.CYROX },
+        { "AACX", content->base1.AACX },
+        { "AACY", content->base1.AACY },
+        { "AACZ", content->base1.AACZ },
+        { "A9-RESERVED-0", content->base2.A9_RESERVED_0 },
+        { "A9-RESERVED-1", content->base2.A9_RESERVED_1 },
     };
-    struct Item zeebig_list[2] = {
-        { "Temperature", 10.00 },
-        { "Humidity", 20.00 },
+    Item zeebig_list[2] = {
+        { "Temperature", content->base3.temperature },
+        { "Humidity", content->base3.humidity },
     };
-    cJSON* a9 = format_array(a9_list);
-    cJSON* zeebig = format_array(zeebig_list);
+    int a9_list_length = sizeof(a9_list) / sizeof(a9_list[0]);
+    int zeebig_list_length = sizeof(zeebig_list) / sizeof(zeebig_list[0]);
+    cJSON* a9 = format_array(a9_list, a9_list_length);
+    cJSON* zeebig = format_array(zeebig_list, zeebig_list_length);
     
-    cJSON *data = cJSON_CreateObject();
+    cJSON* data = cJSON_CreateObject();
     cJSON_AddItemToObject(data, "a9", a9);
     cJSON_AddItemToObject(data, "zeebig", zeebig);
-    
     format_response(0, data, true);
+
     shmdt(shmid);
     return 0;
 }

@@ -28,6 +28,5 @@ int format_response(int code, cJSON *data_obj, bool success) {
     }
 
     cJSON_Delete(root);
-
     return 0;
 }

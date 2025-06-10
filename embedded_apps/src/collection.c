@@ -52,33 +52,23 @@ void collection_thread() {
     printf("Start building data...\n");
 
     RequestData requestParams;
-    requestParams.adc = adc_data;
-    requestParams.base1.CYROX = mpu6050_data.CYROX;
-    requestParams.base1.CYROY = mpu6050_data.CYROY;
-    requestParams.base1.CYROZ = mpu6050_data.CYROZ;
-    requestParams.base1.AACX = mpu6050_data.AACX;
-    requestParams.base1.AACY = mpu6050_data.AACY;
-    requestParams.base1.AACZ = mpu6050_data.AACZ;
-    requestParams.base2.A9_RESERVED_0 = reserved_data.A9_RESERVED_0;
-    requestParams.base2.A9_RESERVED_1 = reserved_data.A9_RESERVED_1;
-    requestParams.base3.temperature = zeebig_data.temperature;
-    requestParams.base3.humidity = zeebig_data.humidity;
-    printf("%f\n", requestParams.adc);
-    printf("%f\n", requestParams.base1.CYROX);
-    printf("%f\n", requestParams.base1.CYROY);
-    printf("%f\n", requestParams.base1.CYROZ);
-    printf("%f\n", requestParams.base1.AACX);
-    printf("%f\n", requestParams.base1.AACY);
-    printf("%f\n", requestParams.base1.AACZ);
-
-    printf("Start sharing data...\n");
     key_t key = ftok("/tmp/env.txt", 65);
     int shmid = shmget(key, 512, IPC_CREAT|0666);
-    char* content = shmat(shmid, NULL, 0);
+    RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
     // bzero(content,512);
-    strcpy(content, (char*)&requestParams);
-    printf("content: %s\n", content);
-    printf("The collection is complete\n");
+    strcpy(content, &requestParams);
+    
+    content->adc = adc_data;
+    content->base1.CYROX = mpu6050_data.CYROX;
+    content->base1.CYROY = mpu6050_data.CYROY;
+    content->base1.CYROZ = mpu6050_data.CYROZ;
+    content->base1.AACX = mpu6050_data.AACX;
+    content->base1.AACY = mpu6050_data.AACY;
+    content->base1.AACZ = mpu6050_data.AACZ;
+    content->base2.A9_RESERVED_0 = reserved_data.A9_RESERVED_0;
+    content->base2.A9_RESERVED_1 = reserved_data.A9_RESERVED_1;
+    content->base3.temperature = zeebig_data.temperature;
+    content->base3.humidity = zeebig_data.humidity;
 }
 
 float get_adc() {
