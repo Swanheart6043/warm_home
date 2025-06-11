@@ -1,14 +1,31 @@
 import React from 'react'
 import styles from './index.module.less'
 import { BaseArea } from './Base'
-import { TimeArea } from './component/TimeArea'
+import { useEffect, useState } from 'react'
+import moment from 'moment'
 
-const Home: React.FC = () => {
+export const Home: React.FC = () => {
+  const [time, setTime] = useState(moment())
+
+  useEffect(() => {
+    const id = setInterval(() => setTime(moment()), 1000)
+    return () => {
+      clearInterval(id)
+    }
+  }, [])
+
   return (
     <div className={styles.home}>
       <div className={styles.head}>
-        <TimeArea />
+        <div className={styles.headLeft}>
+          {moment(time).format('HH:mm:ss')}
+        </div>
+        
         <h3>云控智家大数据平台</h3>
+        
+        <div className={styles.headRight}>
+          {moment(time).format('YYYY年MM月DD号')}
+        </div>
       </div>
 
       <div className={styles.body}>
@@ -17,5 +34,3 @@ const Home: React.FC = () => {
     </div>
   )
 }
-
-export default Home

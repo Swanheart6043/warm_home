@@ -1,8 +1,9 @@
-import { WebGLRenderer, Raycaster, Vector2, PerspectiveCamera, Object3D, OrbitControls } from 'three'
+import { WebGLRenderer, Raycaster, Vector2, PerspectiveCamera, Object3D } from 'three'
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 import { GlobalConfig } from './config'
 import ChangeCamera from './change/camera'
 
-export const initEvent = (renderer: WebGLRenderer, camera: PerspectiveCamera, earthObj: Object3D, parentDom: HTMLElement, controls: OrbitControls) => {
+export const initEvent = (renderer: WebGLRenderer, camera: PerspectiveCamera, earthObj: Object3D, parentDom: HTMLElement, controls: any) => {
   renderer.domElement.addEventListener('click', (event: PointerEvent) => {
     event.preventDefault()
     const raycaster = new Raycaster()
