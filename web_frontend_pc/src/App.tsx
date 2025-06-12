@@ -1,11 +1,11 @@
 import './App.css'
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { FileImageOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined } from '@ant-design/icons';
+import { HomeOutlined, FileImageOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined } from '@ant-design/icons';
 import { Avatar, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import logo from '/react.svg'
 import defaultAvatar from './assets/default-avatar.png'
-import { Home } from './views/Home';
+import { Home } from './views/Home/index';
 import { Environmental } from './views/Environmental';
 import { PhotoWall } from './views/PhotoWall';
 import { Monitor } from './views/Monitor';
@@ -15,6 +15,11 @@ function App() {
   const nav = useNavigate()
 
   const items: Required<MenuProps>['items'][number][] = [
+     {
+      key: 'home',
+      label: '首页',
+      icon: <HomeOutlined />,
+    },
     {
       key: 'control',
       label: '硬件控制',
@@ -58,7 +63,7 @@ function App() {
         <div style={{ borderRight: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 8px' }}>
           <Menu
             style={{ width: 256, background: '#f5f5f5', border: 'none' }}
-            defaultSelectedKeys={['control']}
+            defaultSelectedKeys={['home']}
             mode="inline"
             items={items}
             onClick={handleClick}
@@ -67,7 +72,7 @@ function App() {
 
         <div style={{ flex: '1', overflow: 'auto' }}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/environmental" element={<Environmental />} />
             <Route path="/monitor" element={<Monitor />} />
             <Route path="/photo" element={<PhotoWall />} />

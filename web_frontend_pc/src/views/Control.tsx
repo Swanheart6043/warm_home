@@ -26,31 +26,31 @@ export const Control = () => {
       console.error("row.key不能为空");
       return;
     }
-    const result = await updateLamp({ operate: 'on', whichLed: Number(row.key) })
+    const result = await updateLamp({ operate: value ? 'on' : 'off', whichLed: Number(row.key) })
     if (!result.success) return
     messageApi.success("操作成功")
     setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
 
   const handleSpeakersChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateSpeakers({ operate: 'on', whichLed: 1 })
+    const result = await updateSpeakers({ operate: value ? 'on' : 'off', whichLed: 1 })
     if (!result.success) return
     messageApi.success("操作成功")
-    setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
+    setListForSpeakers((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
   
   const handleFanChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateFan({ operate: 'on', whichLed: 1 })
+    const result = await updateFan({ operate: value ? 'on' : 'off', whichLed: 1 })
     if (!result.success) return
     messageApi.success("操作成功")
-    setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
+    setListForFan((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
   
   const handleDigitalTubeChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateDigitalTube({ operate: 'on', whichLed: 1 })
+    const result = await updateDigitalTube({ operate: value ? 'on' : 'off', whichLed: 1 })
     if (!result.success) return
     messageApi.success("操作成功")
-    setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
+    setListForDigitalTube((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
 
   const columnsForLamp: TableProps<ControlRow>['columns'] = [
