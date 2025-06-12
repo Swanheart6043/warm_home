@@ -1,6 +1,14 @@
 # 云控智家
 一个智能家居项目
 
+# 市场可行性分析
+
+# 商业定位
+消费电子 分享经济
+
+# 商业计划
+见脑图
+
 # 项目架构
 见docs目录中的architecture中的架构图
 
@@ -19,6 +27,9 @@ web_backend - web java后端服务器(后续支持)
 嵌入式：c/c++ boa cjson 多线程 消息队列 共享内存 zeebig IIC ADC PWM 串口 视频流  
 web前端：react antd vite axios  
 web后端：java spring  
+
+# 操作手册
+见docs目录
 
 # 问题总结
 ### cgi中使用JSON
@@ -42,14 +53,14 @@ web后端：java spring
 ### cgi如何给独立的前端传输视频？
 不用cgi，前端去请求视频流服务
 
-
-
-
 ### 硬件控制页，首次进去看不到硬件的状态，不知道硬件开了没
 使用管道
 
 ### 编译器不同，对c99语法的支持会有问题
-待解决
+全部c代码都不使用随用随定义，c++代码可以写
 
 ### Makefile中增加平台判断
-待解决
+增加makefile变量
+
+### embedded_backend改造
+换成cpp，使用现代web服务器路由
