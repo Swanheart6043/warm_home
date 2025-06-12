@@ -1,6 +1,6 @@
 import './App.css'
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { FileImageOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined } from '@ant-design/icons';
+import { HomeOutlined, FileImageOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined } from '@ant-design/icons';
 import { Avatar, Menu } from 'antd';
 import type { MenuProps } from 'antd';
 import logo from '/react.svg'
@@ -18,7 +18,7 @@ function App() {
      {
       key: 'home',
       label: '首页',
-      icon: <WindowsOutlined />,
+      icon: <HomeOutlined />,
     },
     {
       key: 'control',
@@ -63,7 +63,7 @@ function App() {
         <div style={{ borderRight: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 8px' }}>
           <Menu
             style={{ width: 256, background: '#f5f5f5', border: 'none' }}
-            defaultSelectedKeys={['control']}
+            defaultSelectedKeys={['home']}
             mode="inline"
             items={items}
             onClick={handleClick}
@@ -72,7 +72,7 @@ function App() {
 
         <div style={{ flex: '1', overflow: 'auto' }}>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
             <Route path="/environmental" element={<Environmental />} />
             <Route path="/monitor" element={<Monitor />} />
             <Route path="/photo" element={<PhotoWall />} />
