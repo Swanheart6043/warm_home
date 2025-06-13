@@ -1,57 +1,29 @@
-import './App.css'
+import { useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { HomeOutlined, FileImageOutlined, WindowsOutlined, DotChartOutlined, CameraOutlined } from '@ant-design/icons';
-import { Avatar, Menu } from 'antd';
-import type { MenuProps } from 'antd';
-import logo from '/react.svg'
+import logo from '/logo.png'
+import { AppLeftMenu } from './AppLeftMenu';
+import './App.css'
+import { Avatar } from 'antd';
 import defaultAvatar from './assets/default-avatar.png'
 import { Home } from './views/Home/index';
-import { Environmental } from './views/Environmental';
-import { PhotoWall } from './views/PhotoWall';
-import { Monitor } from './views/Monitor';
 import { Control } from './views/Control';
+import { Environmental } from './views/Environmental';
+import { Monitor } from './views/Monitor';
+import { PhotoWall } from './views/PhotoWall';
 
 function App() {
   const nav = useNavigate()
 
-  const items: Required<MenuProps>['items'][number][] = [
-     {
-      key: 'home',
-      label: '首页',
-      icon: <HomeOutlined />,
-    },
-    {
-      key: 'control',
-      label: '硬件控制',
-      icon: <WindowsOutlined />,
-    },
-    {
-      key: 'environmental',
-      label: '环境信息',
-      icon: <DotChartOutlined />,
-    },
-    {
-      key: 'monitor',
-      label: '实时监控',
-      icon: <CameraOutlined />,
-    },
-    {
-      key: 'photo',
-      label: '历时照片',
-      icon: <FileImageOutlined />,
-    },
-  ];
-
-  const handleClick: MenuProps['onClick'] = (e) => {
-    nav('/' + e.key)
-  }
+  useEffect(() => { 
+    nav('/home')
+  }, [])
 
   return (
     <div className='w-full h-full flex' style={{ height: '100%' }}>
       <div className='bg-[#ffffff]' style={{ height: '56px', borderBottom: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <img width={28} src={logo} />
-          <span style={{ fontSize: '18px', fontWeight: '600' }}>云控智家</span>
+          <span style={{ fontSize: '18px', fontWeight: '600' }}>暖宅</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Avatar size="default" src={defaultAvatar} />
@@ -60,15 +32,7 @@ function App() {
       </div>
 
       <div style={{ height: 'calc(100% - 57px)', background: '#f5f5f5', display: 'flex' }}>
-        <div style={{ borderRight: '1px solid rgba(5, 5, 5, 0.06)', padding: '0px 8px' }}>
-          <Menu
-            style={{ width: 256, background: '#f5f5f5', border: 'none' }}
-            defaultSelectedKeys={['home']}
-            mode="inline"
-            items={items}
-            onClick={handleClick}
-          />
-        </div>
+        <AppLeftMenu />
 
         <div style={{ flex: '1', overflow: 'auto' }}>
           <Routes>
