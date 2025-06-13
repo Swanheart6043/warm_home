@@ -7,8 +7,8 @@
 #include <sys/msg.h>
 #include "../../embedded_common/include/led.h"
 
-void fan(char* params) {
-    printf("Led thread preparation\n");
+void fan(char* operate) {
+    printf("Fan thread preparation\n");
     long threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
 
@@ -16,20 +16,15 @@ void fan(char* params) {
 	int is_on = 0;
 	int which_led = 0;
 
-	if(!params) {
+	if(!operate) {
 		printf("The parameter is invalid\n");
-		return 1;
-	}
-
-	if (which_led < 2 || which_led > 5) {
-		printf("Led number is invalid\n");
-		return 2;
+		return -1;
 	}
 
 	fd = open("/dev/led", O_RDONLY);
-	if (fd < 0) {
+	if (fd == -1) {
 		printf("open /dev/led failed\n");
-		return 3;
+		return -1;
 	}
 
 	if (is_on) {

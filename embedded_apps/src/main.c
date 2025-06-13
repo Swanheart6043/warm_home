@@ -46,12 +46,12 @@ void match_msg(long type, MessageBody body) {
     }
 
     if (type == 3) {
-        fan();
+        fan(body.operate);
         return;
     }
 
     if (type == 4) {
-        digital_tube();
+        digital_tube(body.operate);
         return;
     }
     return;

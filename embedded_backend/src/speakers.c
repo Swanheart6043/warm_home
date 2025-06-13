@@ -61,7 +61,7 @@ int main() {
     strncpy(body.operate, operate->valuestring, sizeof(body.operate) - 1);
     body.operate[sizeof(body.operate) - 1] = '\0';
     body.which = 1;
-    Message msg = { .type = 1, .body = body };
+    Message msg = { .type = 2, .body = body };
     int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
     if (result == -1) {
         format_response(-1, cJSON_CreateString("服务器异常"), false);
