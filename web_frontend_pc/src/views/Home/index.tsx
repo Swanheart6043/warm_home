@@ -21,7 +21,7 @@ export const Home: React.FC = () => {
           {moment(time).format('HH:mm:ss')}
         </div>
         
-        <h3>暖宅大数据看板</h3>
+        <h3>暖宅</h3>
         
         <div className={styles.headRight}>
           {moment(time).format('YYYY年MM月DD号')}
