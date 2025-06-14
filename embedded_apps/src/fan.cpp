@@ -4,27 +4,28 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <sys/msg.h>
+#include <pthread.h>
+#include "../include/common.h"
 #include "../../embedded_common/include/led.h"
 
-void fan(char* operate) {
+void fan(MessageBody msgBody) {
     printf("Fan thread preparation\n");
-    long threadId = pthread_self();
+    pthread_t threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
 
 	int fd = -1;
 	int is_on = 0;
 	int which_led = 0;
 
-	if(!operate) {
+	if(!msgBody.operate) {
 		printf("The parameter is invalid\n");
-		return -1;
+		return;
 	}
 
 	fd = open("/dev/led", O_RDONLY);
 	if (fd == -1) {
 		printf("open /dev/led failed\n");
-		return -1;
+		return;
 	}
 
 	if (is_on) {

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -5,35 +6,35 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/msg.h>
+#include <pthread.h>
+#include "../include/common.h"
 #include "../../embedded_common/include/led.h"
 
-void handleClean(void* str){
-    printf("%s\n", (char*)str);
-}
+void led(MessageBody msgBody) {
+	using namespace std;
 
-void* led_thread(char* params) {
+	cout << endl;
 	printf("Led thread preparation\n");
-    long threadId = pthread_self();
+    pthread_t threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
 
 	int fd = -1;
 	int is_on = 0;
 	int which_led = 0;
 
-	if(!params) {
+	if(!msgBody.operate) {
 		printf("The parameter is invalid\n");
-		return 1;
+		return;
 	}
-
-	if (which_led < 2 || which_led > 5) {
+	if (msgBody.which < 2 || msgBody.which > 5) {
 		printf("Led number is invalid\n");
-		return 2;
+		return;
 	}
 
 	fd = open("/dev/led", O_RDONLY);
 	if (fd < 0) {
 		printf("open /dev/led failed\n");
-		return 3;
+		return;
 	}
 
 	if (is_on) {
@@ -47,8 +48,4 @@ void* led_thread(char* params) {
 
 	// 相当于return，但是推荐用exit这个函数;
     pthread_exit(NULL);
-}
-
-void digital_tube_thread(char* params) {
-
 }
