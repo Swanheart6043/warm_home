@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
@@ -13,15 +14,17 @@ ReservedData get_reserved();
 ZeeBigData get_zeebig();
 
 void* collection_thread(void* params) {
+    using namespace std;
+
     printf("\n");
     pthread_t threadId = pthread_self();
-    printf("Start collection thread..., id: %ld", threadId);
+    cout << "Start collection thread..." << endl;
+    cout << "id: " << threadId << endl;
 
     float adc_data = get_adc();
     Mpu6050Data mpu6050_data = get_mpu6050();
     ReservedData reserved_data = get_reserved();
     ZeeBigData zeebig_data = get_zeebig();
-    printf("Start building data...\n");
 
     RequestData requestParams;
     key_t key = ftok("/tmp/env.txt", 65);

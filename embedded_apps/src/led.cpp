@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -9,11 +10,10 @@
 #include "../include/common.h"
 #include "../../embedded_common/include/led.h"
 
-void handleClean(void* str){
-    printf("%s\n", (char*)str);
-}
-
 void led(MessageBody msgBody) {
+	using namespace std;
+
+	cout << endl;
 	printf("Led thread preparation\n");
     pthread_t threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
