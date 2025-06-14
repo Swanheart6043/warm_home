@@ -7,15 +7,14 @@
 #include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../../embedded_common/include/shared_memory.h"
 
-void collection_thread();
 float get_adc();
 Mpu6050Data get_mpu6050();
 ReservedData get_reserved();
 ZeeBigData get_zeebig();
 
-void collection_thread() {
+void* collection_thread(void* params) {
     printf("\n");
-    long threadId = pthread_self();
+    pthread_t threadId = pthread_self();
     printf("Start collection thread..., id: %ld", threadId);
 
     float adc_data = get_adc();
@@ -29,7 +28,7 @@ void collection_thread() {
     int shmid = shmget(key, 512, IPC_CREAT|0666);
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
     bzero(content,512);
-    strcpy(content, &requestParams);
+    strcpy((char*)content, (char*)&requestParams);
     
     content->adc = adc_data;
     content->base1.CYROX = mpu6050_data.CYROX;
