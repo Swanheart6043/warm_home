@@ -10,10 +10,6 @@
 #include <string.h>
 #include <unistd.h>
 
-int set_com_config(int, int, int, char, int);
-int open_port(char*);
-void USB_UART_Config(char*, int);
-
 void* fan_thread(void* params) {
     pthread_t threadId = pthread_self();
 	printf("Fan thread preparation\n");
@@ -24,7 +20,6 @@ void* fan_thread(void* params) {
 		printf("The parameter is invalid\n");
 		return NULL;
 	}
-
 	int fd = open_port("/dev/ttyUSB0");
 	if(fd < 0){
 		printf("open failed\n");
