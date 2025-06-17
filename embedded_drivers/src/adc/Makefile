@@ -18,6 +18,6 @@ clean:
 	rm -rf  *.o  *.ko  .*.cmd  *.mod  *.mod.*  modules.order  Module.symvers   .tmp_versions
 
 else
-obj-m += buzzer.o
+obj-m += adc.o
 
 endif
