@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fcntl.h>
+#include <unistd.h>
 #include "../include/common.h"
 
-ZeeBigData get_zeebig() {
+ZeeBigData collection_zeebig() {
     ZeeBigData zigbee_data;
     using namespace std;
     int fd = open_port("/dev/ttyUSB0");
