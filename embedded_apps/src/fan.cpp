@@ -14,7 +14,8 @@ int set_com_config(int, int, int, char, int);
 int open_port(char*);
 void USB_UART_Config(char*, int);
 
-void fan(MessageBody msgBody) {
+void fan(void* params) {
+    printf("Fan thread preparation\n");
     pthread_t threadId = pthread_self();
 	printf("Fan thread preparation\n");
     printf("当前线程id: %lu\n", threadId);

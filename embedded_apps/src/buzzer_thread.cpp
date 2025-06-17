@@ -8,7 +8,7 @@
 #include "../include/common.h"
 #include "../../embedded_common/include/led.h"
 
-void* buzzerThread(void* params) {
+void* buzzer_thread(void* params) {
     printf("Buzzer thread preparation\n");
     pthread_t threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
