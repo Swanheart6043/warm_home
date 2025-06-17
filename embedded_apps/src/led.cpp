@@ -28,7 +28,7 @@ void led(MessageBody msgBody) {
 		cout << "open /dev/led failed" << endl;
 		return;
 	}
-	ioctl(fd, msgBody.operate ? LED_ON : LED_OFF, which_led);
+	ioctl(fd, msgBody.operate ? LED_ON : LED_OFF, msgBody.which);
 
 	close(fd);
 	fd = -1;

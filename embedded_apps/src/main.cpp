@@ -5,8 +5,10 @@
 #include "../include/common.h"
 
 pthread_t buzzer_tid;
+pthread_t fan_tid;
 pthread_t collection_tid;
 int buzzer_thread_running = 0;
+int fan_thread_running = 0;
 
 void match_msg(long type, MessageBody body) {
     if (!type) {
@@ -22,8 +24,8 @@ void match_msg(long type, MessageBody body) {
             pthread_join(buzzer_tid, NULL);
             buzzer_thread_running = 0;
         }
-        MessageBody* bodyPointer = new MessageBody(body);
-        int buzzer_thread_result = pthread_create(&buzzer_tid, NULL, buzzerThread, bodyPointer);
+        MessageBody* body_pointer = new MessageBody(body);
+        int buzzer_thread_result = pthread_create(&buzzer_tid, NULL, buzzer_thread, body_pointer);
         if (buzzer_thread_result == -1) {
             perror("Failed to create buzzer thread");
             return;
@@ -33,7 +35,19 @@ void match_msg(long type, MessageBody body) {
         return;
     }
     if (type == 3) {
-        fan(body);
+        if (fan_thread_running) {
+            printf("Stopping buzzer thread\n");
+            pthread_join(fan_tid, NULL);
+            fan_thread_running = 0;
+        }
+        MessageBody* body_pointer = new MessageBody(body);
+        int fan_thread_result = pthread_create(&fan_tid, NULL, fan_thread, body_pointer);
+        if (fan_thread_result == -1) {
+            perror("Failed to create buzzer thread");
+            return;
+        }
+        printf ("pthread buzzer end\n");
+        fan_thread_running = 1;
         return;
     }
     return;

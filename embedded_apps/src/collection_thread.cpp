@@ -1,12 +1,15 @@
+#include <pthread.h>
 #include <iostream>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
-#include <sys/shm.h>
 #include <string.h>
-#include <pthread.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/shm.h>
 #include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../../embedded_common/include/shared_memory.h"
+#include "../include/common.h"
 
 float get_adc();
 Mpu6050Data get_mpu6050();
@@ -47,214 +50,66 @@ void* collection_thread(void* params) {
 }
 
 float get_adc() {
-    return 9.00;
+    int data;
+    using namespace std;
+    // int fd = open_port("/dev/ttyUSB0");
+	// if(fd < 0){
+    //     cout << "Open /dev/ttyUSB0 failed" << endl;
+    //     reserved_data.A9_RESERVED_0 = 0;
+    //     reserved_data.A9_RESERVED_1 = 0;
+	//     return zeeBigData;
+	// }
+    return data;
 }
 
 Mpu6050Data get_mpu6050() {
-    // ioctl
-    // ioctl
-    Mpu6050Data mpu6050Data = {
-        .CYROX = -14, 
-        .CYROY = 20,
-        .CYROZ = 40, 
-        .AACX = 642, 
-        .AACY = -34, 
-        .AACZ = 5002,
-    };
-    return mpu6050Data;
+    Mpu6050Data data;
+    using namespace std;
+    // int fd = open_port("/dev/ttyUSB0");
+	// if(fd < 0){
+    //     cout << "Open /dev/ttyUSB0 failed" << endl;
+    //     reserved_data.A9_RESERVED_0 = 0;
+    //     reserved_data.A9_RESERVED_1 = 0;
+	//     return zeeBigData;
+	// }
+    data.CYROX = -14;
+    data.CYROY = 20;
+    data.CYROZ = 40; 
+    data.AACX = 642; 
+    data.AACY = -34;
+    data.AACZ = 5002;
+    return data;
 }
 
 ReservedData get_reserved() {
-    // ioctl
-    // ioctl
-    ReservedData reserved_data = {
-        .A9_RESERVED_0 = 0,
-        .A9_RESERVED_1 = 0,
-    };
+    ReservedData reserved_data;
+    using namespace std;
+    // int fd = open_port("/dev/ttyUSB0");
+	// if(fd < 0){
+    //     cout << "Open /dev/ttyUSB0 failed" << endl;
+    //     reserved_data.A9_RESERVED_0 = 0;
+    //     reserved_data.A9_RESERVED_1 = 0;
+	//     return zeeBigData;
+	// }
+    reserved_data.A9_RESERVED_0 = 0;
+    reserved_data.A9_RESERVED_1 = 0;
     return reserved_data;
 }
 
-/**
- * set
- */
-int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_bits) {
-	struct termios new_cfg, old_cfg;
-	int speed;
-
-	/*保存原有串口配置*/
-	if (tcgetattr(fd, &old_cfg) != 0) {
-		perror("tcgetattr");
-		return -1;
-	}
-
-	new_cfg =old_cfg;
-
-	/*配置为原始模式*/
-	cfmakeraw(&new_cfg);
-	new_cfg.c_cflag &= ~CSIZE;
-
-	/*设置波特率*/
-	switch (baud_rate) {
-		case 2400: {
-			speed = B2400;
-			break; 
-		}
-		case 4800: {
-			speed = B4800;
-			break;
-		}
-		case 9600: {
-			speed = B9600;
-			break;
-		}
-		case 19200: {
-			speed = B19200;
-			break;
-		}
-		case 38400: {
-			speed = B38400;
-			break;
-		}
-		default:
-		case 115000: {
-			speed = B115200;
-			break;
-		}
-	}
-
-	cfsetispeed(&new_cfg, speed);
-	cfsetospeed(&new_cfg, speed);
-
-	/*设置数据位*/
-	switch (data_bits) {
-		case 7:{
-			new_cfg.c_cflag |= CS7;
-			break;
-		}   
-		default:	
-		case 8: {
-			new_cfg.c_cflag |= CS8;
-			break;
-		}
-	}
-
-	/*设置奇偶校验位*/
-	switch (parity) {
-		default:
-		case 'n':
-		case 'N': {
-			new_cfg.c_cflag &= ~PARENB;
-			new_cfg.c_iflag &= ~INPCK;
-			break;
-		}
-		case 'o':
-		case 'O': {
-			new_cfg.c_cflag |= (PARODD |PARENB);
-			new_cfg.c_iflag |= INPCK;
-			break;
-		}
-		case 'e':
-		case 'E': {
-			new_cfg.c_cflag |= PARENB;
-			new_cfg.c_cflag &= ~PARODD;
-			new_cfg.c_iflag |= INPCK;
-			break;
-		}
-		case 's':
-		case 'S': {
-			new_cfg.c_cflag &= ~PARENB;
-			new_cfg.c_cflag &= ~CSTOPB;
-			break;
-		}
-	}
-
-	/*设置停止位*/
-	switch (stop_bits) {
-		default:
-		case 1: {
-			new_cfg.c_cflag &= ~CSTOPB;
-			break;
-		}   	
-		case 2: {
-			new_cfg.c_cflag |= CSTOPB;
-			break;
-		}
-	}
-
-	/*设置等待时间和最小接收字符*/
-	new_cfg.c_cc[VTIME] = 0;
-	new_cfg.c_cc[VMIN] = 1;
-	tcflush(fd, TCIFLUSH);
-	if ((tcsetattr(fd, TCSANOW, &new_cfg)) != 0) {
-		perror("tcsetattr");
-		return -1;
-	}
-
-	return 0;
-}
-
-/**
- * open
- */
-int open_port(char* com_port) {
-	int fd;
-
-	/*打开串口*/
-	fd = open(com_port, O_RDWR|O_NOCTTY|O_NDELAY);
-	if (fd < 0) {
-		perror("open serial port");
-		return -1;
-	}
-
-	/*恢复串口阻塞状态*/
-	if (fcntl(fd, F_SETFL, 0) < 0) {
-		perror("fcntl F_SETFL\n");
-	}
-
-	/*判断是否为终端设备*/
-	if (isatty(fd) == 0) {
-		perror("This is not a terminal device");
-	}
-
-	return fd;
-}
-
-/**
- * CH340Ƥ
- * @param path
- */
-void USB_UART_Config(char* path, int baud_rate) {
-	int fd;
-	fd = open_port(path);
-	if(fd < 0) {
-		printf("open %s failed\n",path);
-		return ;
-	}
-	if (set_com_config(fd, baud_rate, 8, 'N', 1) < 0) {
-		perror("set_com_config");
-		return ;
-	}
-	close(fd);
-	return ;
-}
-
-
 ZeeBigData get_zeebig() {
+    ZeeBigData zigbee_data;
+    using namespace std;
     int fd = open_port("/dev/ttyUSB0");
-
 	if(fd < 0){
-		printf("open failed\n");
-		return -1;
+        cout << "Open /dev/ttyUSB0 failed" << endl;
+        zigbee_data.temperature = 00.00;
+        zigbee_data.humidity = 00.00;
+		return zigbee_data;
 	}
-
 	set_com_config(fd, 115200, 8, 'N', 1);
-    read(fd,&buf,sizeof(buf));  //read函数是阻塞的
-    printf("sizeof(buf) = %d.\n",sizeof(buf));
-	printf(">>>>>>%s\n",buf);
-
-    ZeeBigData ZeeBigData = {
-        .temperature = 10.00,
-        .humidity = 20.00,
-    };
-    return ZeeBigData;
+    char buf[32];
+    read(fd, &buf, sizeof(buf)); // read函数是阻塞的
+    zigbee_data.temperature = 10.00;
+    zigbee_data.humidity = 20.00;
+    return zigbee_data;
 }
