@@ -8,7 +8,7 @@
 #include "../include/common.h"
 #include "../../embedded_common/include/led.h"
 
-void fan(MessageBody msgBody) {
+void fan(void* params) {
     printf("Fan thread preparation\n");
     pthread_t threadId = pthread_self();
     printf("当前线程id: %lu\n", threadId);
