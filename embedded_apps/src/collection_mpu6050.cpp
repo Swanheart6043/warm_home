@@ -1,13 +1,13 @@
 #include <iostream>
-#include <unstd.h>
-// #include <fa>
+#include <unistd.h>
+#include <fcntl.h>
 #include "../include/common.h"
 
 Mpu6050Data collection_mpu6050() {
     Mpu6050Data data;
     using namespace std;
     
-    int fd = open("/dev/i2c");
+    int fd = open("/dev/i2c", O_RDONLY);
     if (fd == -1) {
         cout << "Open /dev/i2c failed" << endl;
         data.CYROX = 0;
