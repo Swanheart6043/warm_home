@@ -13,7 +13,7 @@ all: $(TARGET)
 
 # 链接目标
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ -lpthread
 
 # 编译每个.cpp文件到.o
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp

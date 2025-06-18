@@ -1,3 +1,6 @@
+/embedded_apps/build
+/embedded_backend/build
+
 # Logs
 logs
 *.log

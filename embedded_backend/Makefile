@@ -38,5 +38,8 @@ deploy: all
 	cp $(TARGETS) $(DEPLOY_DIR)
 	@echo "Done."
 
+# 清理编译生成的文件
 clean:
-	rm -f $(TARGETS)
+	rm -rf $(BUILD_DIR)
+
+.PHONY: all clean
