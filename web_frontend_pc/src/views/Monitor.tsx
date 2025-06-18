@@ -1,7 +1,7 @@
 export const Monitor = () => {
   return (
     <div style={{ height: '100%', padding: '20px' }}>
-      <video src="/test.mp4" controls></video>
+      <img src="http://192.168.1.100:8080/?action=stream" />
     </div>
   )
 }
