@@ -6,6 +6,10 @@
 #include "../../embedded_common/include/message.h"
 
 int main() {
+    long type;
+    char* operate;
+    short which;
+
     key_t key = ftok("/tmp/control.txt", 'g');
     if (key == -1) {
         printf("key cannot be == -1\n");
@@ -17,11 +21,18 @@ int main() {
         return -1;
     }
     
+    scanf("%ld", &type);
+    scanf("%s", &operate);
+    scanf("%d", &which);
+
     MessageBody body;
-    strncpy(body.operate, "on", sizeof(body.operate) - 1);
+    strncpy(body.operate, operate, sizeof(body.operate) - 1);
     body.operate[sizeof(body.operate) - 1] = '\0';
-    body.which = 1;
-    Message msg = { .type = 3, .body = body };
+    body.which = which;
+    Message msg;
+    msg.type = type;
+    msg.body = body;
+    
     int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
     if (result == -1) {
         printf("msgsnd cannot be == -1\n");
