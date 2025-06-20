@@ -4,25 +4,18 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-/**
- * set
- */
 int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_bits) {
 	struct termios new_cfg, old_cfg;
 	int speed;
-
 	/*保存原有串口配置*/
 	if (tcgetattr(fd, &old_cfg) != 0) {
 		perror("tcgetattr");
 		return -1;
 	}
-
 	new_cfg = old_cfg;
-
 	/*配置为原始模式*/
 	cfmakeraw(&new_cfg);
 	new_cfg.c_cflag &= ~CSIZE;
-
 	/*设置波特率*/
 	switch (baud_rate) {
 		case 2400: {
@@ -51,10 +44,8 @@ int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_b
 			break;
 		}
 	}
-
 	cfsetispeed(&new_cfg, speed);
 	cfsetospeed(&new_cfg, speed);
-
 	/*设置数据位*/
 	switch (data_bits) {
 		case 7:{
@@ -67,7 +58,6 @@ int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_b
 			break;
 		}
 	}
-
 	/*设置奇偶校验位*/
 	switch (parity) {
 		default:
@@ -97,7 +87,6 @@ int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_b
 			break;
 		}
 	}
-
 	/*设置停止位*/
 	switch (stop_bits) {
 		default:
@@ -110,7 +99,6 @@ int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_b
 			break;
 		}
 	}
-
 	/*设置等待时间和最小接收字符*/
 	new_cfg.c_cc[VTIME] = 0;
 	new_cfg.c_cc[VMIN] = 1;
@@ -119,51 +107,24 @@ int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_b
 		perror("tcsetattr");
 		return -1;
 	}
-
 	return 0;
 }
 
-/**
- * open
- */
 int open_port(char* com_port) {
 	int fd;
-
 	/*打开串口*/
 	fd = open(com_port, O_RDWR|O_NOCTTY|O_NDELAY);
 	if (fd < 0) {
 		perror("open serial port");
 		return -1;
 	}
-
 	/*恢复串口阻塞状态*/
 	if (fcntl(fd, F_SETFL, 0) < 0) {
 		perror("fcntl F_SETFL\n");
 	}
-
 	/*判断是否为终端设备*/
 	if (isatty(fd) == 0) {
 		perror("This is not a terminal device");
 	}
-
 	return fd;
-}
-
-/**
- * CH340Ƥ
- * @param path
- */
-void USB_UART_Config(char* path, int baud_rate) {
-	int fd;
-	fd = open_port(path);
-	if(fd < 0) {
-		printf("open %s failed\n",path);
-		return ;
-	}
-	if (set_com_config(fd, baud_rate, 8, 'N', 1) < 0) {
-		perror("set_com_config");
-		return ;
-	}
-	close(fd);
-	return ;
 }

@@ -15,16 +15,16 @@ void* buzzer_thread(void* params) {
 
     int fd = -1;
 	int is_on = 0;
-	MessageBody* msgBody = static_cast<MessageBody*>(params);
+	MessageBody* msgBody = (MessageBody*)params;
 
 	if(!msgBody->operate) {
 		printf("The parameter is invalid\n");
 		return NULL;
 	}
 
-	fd = open("/dev/led", O_RDONLY);
+	fd = open("/dev/buzzer", O_RDONLY);
 	if (fd < 0) {
-		printf("open /dev/led failed\n");
+		printf("open /dev/buzzer failed\n");
 		return NULL;
 	}
 
@@ -32,6 +32,5 @@ void* buzzer_thread(void* params) {
 
 	close(fd);
 	fd = -1;
-	delete msgBody;
 	pthread_exit(NULL);
 }

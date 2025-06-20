@@ -1,4 +1,3 @@
-#include <iostream>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -9,23 +8,22 @@
 #include "../../embedded_common/include/led.h"
 
 void led(MessageBody msgBody) {
-	using namespace std;
-	cout << endl;
-	cout << "Led" << endl;
+	printf("\n");
+	printf("Led\n");
 	
 	if(!msgBody.operate) {
-		cout << "The parameter is invalid" << endl;
+		printf("The parameter is invalid\n");
 		return;
 	}
 
 	if (msgBody.which < 2 || msgBody.which > 5) {
-		cout << "Led number is invalid" << endl;
+		printf("Led number is invalid\n");
 		return;
 	}
 
 	int fd = open("/dev/led", O_RDONLY);
 	if (fd == -1) {
-		cout << "open /dev/led failed" << endl;
+		printf("open /dev/led failed\n");
 		return;
 	}
 	ioctl(fd, msgBody.operate ? LED_ON : LED_OFF, msgBody.which);

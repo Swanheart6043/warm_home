@@ -1,5 +1,4 @@
 #include <pthread.h>
-#include <iostream>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
@@ -14,11 +13,9 @@ float get_adc();
 ReservedData get_reserved();
 
 void* collection_thread(void* params) {
-    using namespace std;
     printf("\n");
+    printf("Start collection thread...\n");
     pthread_t threadId = pthread_self();
-    cout << "Start collection thread..." << endl;
-    cout << "id: " << threadId << endl;
 
     RequestData requestParams;
     key_t key = ftok("/tmp/env.txt", 65);
@@ -28,8 +25,8 @@ void* collection_thread(void* params) {
     strcpy((char*)content, (char*)&requestParams);
     
     float adc_data = get_adc();
-    Mpu6050Data mpu6050_data = collection_mpu6050();
-    ZeeBigData zeebig_data = collection_zeebig();
+    Mpu6050Data mpu6050_data = mpu6050();
+    ZeeBigData zeebig_data = temperature();
     ReservedData reserved_data = get_reserved();
     content->adc = adc_data;
     content->base1.CYROX = mpu6050_data.CYROX;
@@ -46,7 +43,6 @@ void* collection_thread(void* params) {
 
 float get_adc() {
     int data;
-    using namespace std;
     // int fd = open_port("/dev/ttyUSB0");
 	// if(fd < 0){
     //     cout << "Open /dev/ttyUSB0 failed" << endl;
@@ -59,7 +55,6 @@ float get_adc() {
 
 ReservedData get_reserved() {
     ReservedData reserved_data;
-    using namespace std;
     // int fd = open_port("/dev/ttyUSB0");
 	// if(fd < 0){
     //     cout << "Open /dev/ttyUSB0 failed" << endl;
