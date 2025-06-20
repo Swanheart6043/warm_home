@@ -17,7 +17,7 @@ int set_com_config(int fd, int baud_rate, int data_bits, char parity, int stop_b
 		return -1;
 	}
 
-	new_cfg =old_cfg;
+	new_cfg = old_cfg;
 
 	/*配置为原始模式*/
 	cfmakeraw(&new_cfg);
