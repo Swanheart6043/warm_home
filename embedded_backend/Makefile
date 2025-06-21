@@ -1,11 +1,11 @@
 CC = g++
-CJSON_INC = ../embedded_common/lib/cjson
-CJSON_LIB = ../embedded_common/lib/cjson
+CJSON_INC = ./src/cjson
+CJSON_LIB = ./src/cjson
 CFLAGS = -Wall -Wextra -O2 -I$(CJSON_INC)
 
 BUILD_DIR = ./build
 SRC_DIR = ./src
-TOOLS_DIR = $(SRC_DIR)/tools
+TOOLS_DIR = $(SRC_DIR)/utils
 DEPLOY_DIR = /boa/cgi-bin
 
 COMMON_SRCS = $(TOOLS_DIR)/format_response.cpp $(CJSON_LIB)/cJSON.c
