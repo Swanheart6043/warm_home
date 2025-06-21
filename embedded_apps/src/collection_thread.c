@@ -6,14 +6,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/shm.h>
-#include "../../embedded_common/lib/cjson/cJSON.h"
 #include "../include/common.h"
 
 float get_adc();
 ReservedData get_reserved();
 
 void* collection_thread(void* params) {
-    printf("\n");
     printf("Start collection thread...\n");
     pthread_t threadId = pthread_self();
 
@@ -28,6 +26,7 @@ void* collection_thread(void* params) {
     Mpu6050Data mpu6050_data = mpu6050();
     ZeeBigData zeebig_data = temperature();
     ReservedData reserved_data = get_reserved();
+    
     content->adc = adc_data;
     content->base1.CYROX = mpu6050_data.CYROX;
     content->base1.CYROY = mpu6050_data.CYROY;
@@ -42,26 +41,12 @@ void* collection_thread(void* params) {
 }
 
 float get_adc() {
-    int data;
-    // int fd = open_port("/dev/ttyUSB0");
-	// if(fd < 0){
-    //     cout << "Open /dev/ttyUSB0 failed" << endl;
-    //     reserved_data.A9_RESERVED_0 = 0;
-    //     reserved_data.A9_RESERVED_1 = 0;
-	//     return zeeBigData;
-	// }
+    int data = 0;
     return data;
 }
 
 ReservedData get_reserved() {
     ReservedData reserved_data;
-    // int fd = open_port("/dev/ttyUSB0");
-	// if(fd < 0){
-    //     cout << "Open /dev/ttyUSB0 failed" << endl;
-    //     reserved_data.A9_RESERVED_0 = 0;
-    //     reserved_data.A9_RESERVED_1 = 0;
-	//     return zeeBigData;
-	// }
     reserved_data.A9_RESERVED_0 = 0;
     reserved_data.A9_RESERVED_1 = 0;
     return reserved_data;

@@ -44,3 +44,7 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 .PHONY: all test clean
+
+deploy: all
+	sudo cp $(TARGET) $(TEST_TARGET) ~/nfs/4412/smart_home
+	@echo "Deploy done."

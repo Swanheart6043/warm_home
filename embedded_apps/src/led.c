@@ -7,16 +7,15 @@
 #include "../include/common.h"
 #include "../../embedded_common/include/led.h"
 
-void led(MessageBody msgBody) {
+void led(MessageBody msg_body) {
 	printf("\n");
-	printf("Led\n");
-	
-	if(!msgBody.operate) {
-		printf("The parameter is invalid\n");
+	printf("led\n");
+	if(!msg_body.operate) {
+		printf("msg_body cannot be empty\n");
 		return;
 	}
 
-	if (msgBody.which < 2 || msgBody.which > 5) {
+	if (msg_body.which < 2 || msg_body.which > 5) {
 		printf("Led number is invalid\n");
 		return;
 	}
@@ -26,7 +25,7 @@ void led(MessageBody msgBody) {
 		printf("open /dev/led failed\n");
 		return;
 	}
-	ioctl(fd, msgBody.operate ? LED_ON : LED_OFF, msgBody.which);
+	ioctl(fd, msg_body.operate ? LED_ON : LED_OFF, msg_body.which);
 
 	close(fd);
 	fd = -1;

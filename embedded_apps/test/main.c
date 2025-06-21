@@ -7,8 +7,8 @@
 
 int main() {
     long type;
-    char* operate;
-    short which;
+    char operate[2] = {'\0'};
+    unsigned short which;
 
     key_t key = ftok("/tmp/control.txt", 'g');
     if (key == -1) {
@@ -21,9 +21,10 @@ int main() {
         return -1;
     }
     
-    scanf("%ld", &type);
-    scanf("%s", &operate);
-    scanf("%d", &which);
+    scanf("%ld %s %hu", &type, operate, &which);
+    printf("type:%ld\n", type);
+    printf("operate:%s\n", operate);
+    printf("which:%hu\n", which);
 
     MessageBody body;
     strncpy(body.operate, operate, sizeof(body.operate) - 1);
@@ -32,7 +33,7 @@ int main() {
     Message msg;
     msg.type = type;
     msg.body = body;
-    
+
     int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
     if (result == -1) {
         printf("msgsnd cannot be == -1\n");

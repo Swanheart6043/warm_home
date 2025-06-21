@@ -8,6 +8,7 @@
 #include <string.h>
 #include <termios.h>
 #include "../include/common.h"
+#include "../include/zigbee.h"
 
 ZeeBigData temperature() {
     ZeeBigData zigbee_data;

@@ -82,25 +82,7 @@ void match_msg(long type, MessageBody body) {
         return;
     }
     if (type == 3) {
-        printf("Fan\n");
-        MessageBody* msgBody = malloc(sizeof(MessageBody));
-        if (msgBody == NULL) {
-            printf("Failed to allocate memory\n");
-            return;
-        }
-        *msgBody = body;
-        if (fan_thread_running) {
-            pthread_join(fan_tid, NULL);
-            fan_thread_running = 0;
-        }
-        int fan_thread_result = pthread_create(&fan_tid, NULL, fan_thread, msgBody);
-        if (fan_thread_result == -1) {
-            printf("Failed to create fan thread\n");
-            fan_thread_running = 0;
-            free(msgBody);
-            return;
-        }
-        fan_thread_running = 1;
+        fan(body);
         return;
     }
     return;
