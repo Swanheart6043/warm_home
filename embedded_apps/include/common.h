@@ -3,10 +3,7 @@
 
 void led(MessageBody);
 void* buzzer_thread(void*);
-void* fan_thread(void*);
+void fan(MessageBody);
 void* collection_thread(void*);
-Mpu6050Data collection_mpu6050();
-ZeeBigData collection_zeebig();
-int set_com_config(int, int, int, char, int);
-int open_port(char*);
-void USB_UART_Config(char*, int);
+ZeeBigData temperature();
+Mpu6050Data mpu6050();

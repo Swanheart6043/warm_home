@@ -1,2 +1,2 @@
-/home/swanheart/codes/drivers/led/led.ko
-/home/swanheart/codes/drivers/led/led.o
+/home/swanheart/codes/SmartHome/embedded_drivers/src/led/led.ko
+/home/swanheart/codes/SmartHome/embedded_drivers/src/led/led.o
