@@ -1,5 +1,5 @@
 CC = g++
-CJSON_INC = ./src/cjson
+CJSON_INC = ./include
 CJSON_LIB = ./src/cjson
 CFLAGS = -Wall -Wextra -O2 -I$(CJSON_INC)
 
