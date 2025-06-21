@@ -63,11 +63,13 @@ int main() {
         cJSON_Delete(json);
         return -1;
     }
-    MessageBody body;
-    strncpy(body.operate, cJSON_IsTrue(isOpen) ? "1" : "0", sizeof(body.operate) - 1);
-    body.operate[sizeof(body.operate) - 1] = '\0';
-    body.which = which->valueint;
-    Message msg = { .type = 1, .body = body };
+    Message msg;
+    char* operate = cJSON_IsTrue(isOpen) ? "on" : "off";
+    msg.type = 1;
+    strncpy(msg.body.operate, operate, sizeof(msg.body.operate) - 1);
+    msg.body.operate[sizeof(msg.body.operate) - 1] = '\0';
+    msg.body.which = which->valueint;
+    
     int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
     if (result == -1) {
         format_response(-1, cJSON_CreateString("服务器异常"), false);

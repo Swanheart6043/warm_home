@@ -62,6 +62,9 @@ void match_msg(long type, MessageBody body) {
     if (!type) {
         return;
     }
+    printf("type: %ld\n", type);
+    printf("operate: %ld\n", body.operate);
+    printf("which: %ld\n", body.which);
     if (type == 1) {
         led(body);
         return;
