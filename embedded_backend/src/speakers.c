@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include "./cjson/cJSON.h"
+#include "../include/cJSON.h"
 #include "../include/format_response.h"
 #include "../../embedded_common/include/message.h"
 
