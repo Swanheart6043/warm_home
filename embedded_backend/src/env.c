@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include "../../embedded_common/lib/cjson/cJSON.h"
+#include "../include/cJSON.h"
 #include "../include/format_response.h"
 #include "../../embedded_common/include/shared_memory.h"
 
