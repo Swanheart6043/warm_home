@@ -19,8 +19,12 @@ void* collection_thread(void* params) {
     key_t key = ftok("/tmp/env.txt", 65);
     int shmid = shmget(key, 512, IPC_CREAT|0666);
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
-    bzero(content,512);
+    // bzero(content,512);
     strcpy((char*)content, (char*)&requestParams);
+    
+    // while (1) {
+
+    // }
     
     float adc_data = get_adc();
     Mpu6050Data mpu6050_data = mpu6050();

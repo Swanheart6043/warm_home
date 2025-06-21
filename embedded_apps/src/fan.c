@@ -27,7 +27,7 @@ void fan(MessageBody msg_body) {
 	}
 
 	set_com_config(fd, 115200, 8, 'N', 1);
-	int result = write(fd, msg_body.operate, 2);
+	int result = write(fd, strcmp(msg_body.operate, "on") == 0 ? "00" : "11", 2);
 	if (result == -1) {
 		printf("write /dev/ttyUSB0 error\n");
 		return;

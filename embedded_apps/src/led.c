@@ -15,7 +15,7 @@ void led(MessageBody msg_body) {
 		return;
 	}
 
-	if (msg_body.which < 2 || msg_body.which > 5) {
+	if (msg_body.which < 1 || msg_body.which > 4) {
 		printf("Led number is invalid\n");
 		return;
 	}
@@ -25,7 +25,7 @@ void led(MessageBody msg_body) {
 		printf("open /dev/led failed\n");
 		return;
 	}
-	ioctl(fd, msg_body.operate == "on" ? LED_ON : LED_OFF, msg_body.which);
+	ioctl(fd, msg_body.operate == "on" ? LED_ON : LED_OFF, msg_body.which + 1);
 
 	close(fd);
 	fd = -1;

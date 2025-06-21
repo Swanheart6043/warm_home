@@ -250,6 +250,7 @@ Mpu6050Data mpu6050() {
 	data.AACY = (float)read_accely(fd);
 	data.AACZ = (float)read_accelz(fd);
 
+	printf("\n");
 	printf("%f\n", (float)read_gyrox(fd));
 	printf("%f\n", (float)read_gyroy(fd));
 	printf("%f\n", (float)read_gyroz(fd));

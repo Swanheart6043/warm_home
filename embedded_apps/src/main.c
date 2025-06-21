@@ -62,9 +62,10 @@ void match_msg(long type, MessageBody body) {
     if (!type) {
         return;
     }
+    printf("\n", type);
     printf("type: %ld\n", type);
-    printf("operate: %ld\n", body.operate);
-    printf("which: %ld\n", body.which);
+    printf("operate: %s\n", body.operate);
+    printf("which: %d\n", body.which);
     if (type == 1) {
         led(body);
         return;
@@ -106,6 +107,7 @@ int main() {
         printf("msgid cannot be == -1\n");
         return -1;
     }
+    printf("Start app...\n");
     
     // 创建常驻线程
     int collection_thread_result = pthread_create(&collection_tid, NULL, collection_thread, NULL);
@@ -113,10 +115,6 @@ int main() {
         perror("Failed to create collection thread");
         return -1;
     }
-    
-    // 准备完成
-    printf("\n");
-    printf("App started, waiting commands...\n");
 
     // 监听消息
     while(1) {
