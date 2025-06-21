@@ -24,8 +24,8 @@ export interface ControlRow {
 }
 
 export interface ControlRequest {
-  operate: string;
-  whichLed: number;
+  isOpen: boolean;
+  which: number;
 }
 
 export interface CardProps {

@@ -32,7 +32,7 @@ export const Environmental = () => {
     
     const timeId = setInterval(() => {
       getData()
-    }, 1000)
+    }, 5000)
 
     return () => {
       clearInterval(timeId)
@@ -63,7 +63,8 @@ export const Environmental = () => {
           ZeeBig
         </div>
         <div>
-          {zeebigList.map((item) => <Card name={item.name} count={item.count} />)}
+          <Card name={zeebigList[0]?.name} count={zeebigList[0]?.count} />
+          <Card name={zeebigList[0]?.name} count={zeebigList[0]?.count} />
         </div>
       </div>
     </div>
