@@ -1,7 +1,6 @@
 import * as TWEEN from 'tween'
 import { PerspectiveCamera, Vector3 } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
 
 interface IChangeCameraConfig {
   ease: string,
