@@ -1,13 +1,12 @@
 import { message, Switch, Table, type TableProps } from "antd"
 import { useEffect, useState } from "react";
-import { fetchControlData, updateDigitalTube, updateFan, updateLamp, updateSpeakers } from "../apis/api";
+import { fetchControlData, updateFan, updateLamp, updateSpeakers } from "../apis/api";
 import type { ControlRow } from "../apis/apiType";
 
 export const Control = () => {
   const [listForLamp, setListForLamp] = useState<ControlRow[]>([])
   const [listForSpeakers, setListForSpeakers] = useState<ControlRow[]>([])
   const [listForFan, setListForFan] = useState<ControlRow[]>([])
-  const [listForDigitalTube, setListForDigitalTube] = useState<ControlRow[]>([])
   const [messageApi, contextHolder] = message.useMessage()
 
   useEffect(() => {
@@ -16,7 +15,6 @@ export const Control = () => {
       setListForLamp(result.data?.lamp?.map(item => ({ ...item, key: String(item.key) })) || [])
       setListForSpeakers(result.data?.speakers?.map(item => ({ ...item, key: String(item.key) })) || [])
       setListForFan(result.data?.fan?.map(item => ({ ...item, key: String(item.key) })) || [])
-      setListForDigitalTube(result.data?.digitalTube?.map(item => ({ ...item, key: String(item.key) })) || [])
     }
     getList();
   }, [])
@@ -26,31 +24,41 @@ export const Control = () => {
       console.error("row.key不能为空");
       return;
     }
-    const result = await updateLamp({ operate: value ? 'on' : 'off', whichLed: Number(row.key) })
+    const result = await updateLamp({ 
+      isOpen: value, 
+      which: Number(row.key) 
+    })
     if (!result.success) return
     messageApi.success("操作成功")
     setListForLamp((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
 
   const handleSpeakersChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateSpeakers({ operate: value ? 'on' : 'off', whichLed: 1 })
+    if (!row.key) {
+      console.error("row.key不能为空");
+      return;
+    }
+    const result = await updateSpeakers({ 
+      isOpen: value, 
+      which: Number(row.key) 
+    })
     if (!result.success) return
     messageApi.success("操作成功")
     setListForSpeakers((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
   
   const handleFanChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateFan({ operate: value ? 'on' : 'off', whichLed: 1 })
+    if (!row.key) {
+      console.error("row.key不能为空");
+      return;
+    }
+    const result = await updateFan({ 
+      isOpen: value, 
+      which: Number(row.key) 
+    })
     if (!result.success) return
     messageApi.success("操作成功")
     setListForFan((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
-  }
-  
-  const handleDigitalTubeChange = (row: ControlRow) => async (value: boolean) => {
-    const result = await updateDigitalTube({ operate: value ? 'on' : 'off', whichLed: 1 })
-    if (!result.success) return
-    messageApi.success("操作成功")
-    setListForDigitalTube((newList) => newList.map(item => ({ ...item, checked: item.key === row.key ? value : item.checked })))
   }
 
   const columnsForLamp: TableProps<ControlRow>['columns'] = [
@@ -89,18 +97,6 @@ export const Control = () => {
       render: (checked: boolean, row: ControlRow) => <Switch checked={checked} onChange={handleFanChange(row)} />
     }
   ]
-  const columnsForDigitalTube: TableProps<ControlRow>['columns'] = [
-    { 
-      title: '数码屏名', 
-      dataIndex: 'name' 
-    },
-    { 
-      title: '操作', 
-      dataIndex: 'checked', 
-      width: 100, 
-      render: (checked: boolean, row: ControlRow) => <Switch checked={checked} onChange={handleDigitalTubeChange(row)} />
-    }
-  ]
 
   return (
     <div style={{ height: '100%', padding: '20px' }}>
@@ -127,15 +123,6 @@ export const Control = () => {
           rowKey={(r) => r.key || ''}
           columns={columnsForFan} 
           dataSource={listForFan} 
-          pagination={false} 
-        />
-      </div>
-      
-      <div style={{ backgroundColor: '#fff', padding: '20px' }}>
-        <Table<ControlRow> 
-          rowKey={(r) => r.key || ''}
-          columns={columnsForDigitalTube} 
-          dataSource={listForDigitalTube} 
           pagination={false} 
         />
       </div>

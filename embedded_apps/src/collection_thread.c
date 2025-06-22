@@ -1,35 +1,35 @@
+#include <pthread.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <stdio.h>
-#include <sys/shm.h>
 #include <string.h>
-#include <pthread.h>
-#include "../../embedded_common/lib/cjson/cJSON.h"
-#include "../../embedded_common/include/shared_memory.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/shm.h>
+#include "../include/common.h"
 
-void collection_thread();
 float get_adc();
-Mpu6050Data get_mpu6050();
 ReservedData get_reserved();
-ZeeBigData get_zeebig();
 
-void collection_thread() {
-    printf("\n");
-    long threadId = pthread_self();
-    printf("Start collection thread..., id: %ld", threadId);
-
-    float adc_data = get_adc();
-    Mpu6050Data mpu6050_data = get_mpu6050();
-    ReservedData reserved_data = get_reserved();
-    ZeeBigData zeebig_data = get_zeebig();
-    printf("Start building data...\n");
+void* collection_thread(void* params) {
+    printf("Start collection thread...\n");
+    pthread_t threadId = pthread_self();
 
     RequestData requestParams;
     key_t key = ftok("/tmp/env.txt", 65);
     int shmid = shmget(key, 512, IPC_CREAT|0666);
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
-    bzero(content,512);
-    strcpy(content, &requestParams);
+    // bzero(content,512);
+    strcpy((char*)content, (char*)&requestParams);
+    
+    // while (1) {
+
+    // }
+    
+    float adc_data = get_adc();
+    Mpu6050Data mpu6050_data = mpu6050();
+    ZeeBigData zeebig_data = temperature();
+    ReservedData reserved_data = get_reserved();
     
     content->adc = adc_data;
     content->base1.CYROX = mpu6050_data.CYROX;
@@ -42,42 +42,37 @@ void collection_thread() {
     content->base2.A9_RESERVED_1 = reserved_data.A9_RESERVED_1;
     content->base3.temperature = zeebig_data.temperature;
     content->base3.humidity = zeebig_data.humidity;
+
+    printf("\n");
+	printf("%f\n", content->adc);
+	printf("%f\n", content->base1.CYROX);
+	printf("%f\n", content->base1.CYROY);
+	printf("%f\n", content->base1.CYROZ);
+	printf("%f\n", content->base1.AACX);
+	printf("%f\n", content->base1.AACY);
+    printf("%f\n", content->base1.AACZ);
+    printf("%f\n", content->base3.temperature);
+    printf("%f\n", content->base3.humidity);
 }
 
 float get_adc() {
-    return 9.00;
-}
-
-Mpu6050Data get_mpu6050() {
-    // ioctl
-    // ioctl
-    Mpu6050Data mpu6050Data = {
-        .CYROX = -14, 
-        .CYROY = 20,
-        .CYROZ = 40, 
-        .AACX = 642, 
-        .AACY = -34, 
-        .AACZ = 5002,
-    };
-    return mpu6050Data;
+    int data = 0;
+    int fd = open("/dev/adc0", O_RDWR);
+    if (fd == -1) {
+        printf("Open /dev/adc0 failed\n");
+        return data;
+    }
+    int readResult = read(fd, &data, sizeof(data));
+    /*将结果转换成实际的电压值mv*/
+    data *= 0.44;
+    close(fd);
+	fd = -1;
+    return data;
 }
 
 ReservedData get_reserved() {
-    // ioctl
-    // ioctl
-    ReservedData reserved_data = {
-        .A9_RESERVED_0 = 0,
-        .A9_RESERVED_1 = 0,
-    };
+    ReservedData reserved_data;
+    reserved_data.A9_RESERVED_0 = 0;
+    reserved_data.A9_RESERVED_1 = 0;
     return reserved_data;
-}
-
-ZeeBigData get_zeebig() {
-    // ioctl
-    // ioctl
-    ZeeBigData ZeeBigData = {
-        .temperature = 10.00,
-        .humidity = 20.00,
-    };
-    return ZeeBigData;
 }

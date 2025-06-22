@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "../../embedded_common/lib/cjson/cJSON.h"
+#include "../include/cJSON.h"
 #include "../include/format_response.h"
 
 typedef struct {
     int key;
-    char* name;
+    char name[10];
     bool checked;
 } Item;
 

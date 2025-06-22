@@ -1,4 +1,4 @@
-typedef struct {
+typedef struct Mpu6050Data {
     float CYROX;
     float CYROY;
     float CYROZ;

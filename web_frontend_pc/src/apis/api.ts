@@ -21,11 +21,6 @@ export const updateFan = async (params: ControlRequest) => {
   return result.data
 }
 
-export const updateDigitalTube = async (params: ControlRequest) => {
-  const result = await axios.post<Response<null>>('/cgi-bin/lamp_special.cgi', params)
-  return result.data
-}
-
 export const fetchEnvironmentalData = async () => {
   const result = await axios.get<Response<Environmenta>>('/cgi-bin/env.cgi')
   return result.data

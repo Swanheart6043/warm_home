@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include "../../embedded_common/lib/cjson/cJSON.h"
+#include "../include/cJSON.h"
 #include "../include/format_response.h"
 #include "../../embedded_common/include/shared_memory.h"
 
@@ -49,6 +49,7 @@ int main() {
     }
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
     // bzero(content,512);
+    
     Item a9_list[9] = {
         { "Adc", content->adc },
         { "CYROX", content->base1.CYROX },
@@ -74,6 +75,6 @@ int main() {
     cJSON_AddItemToObject(data, "zeebig", zeebig);
     format_response(0, data, true);
 
-    shmdt(shmid);
+    shmdt((void*)shmid);
     return 0;
 }
