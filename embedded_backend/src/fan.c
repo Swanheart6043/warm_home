@@ -11,12 +11,12 @@
 int main() {    
     printf("Content-Type: application/json\r\n\r\n");
 
+    // 判断请求方式
     const char* method = getenv("REQUEST_METHOD");
     if (strcmp(method, "POST") != 0) {
         format_response(-1, cJSON_CreateString("请求方式错误"), false);
         return -1;
     }
-    
     // 获取POST数据长度
     char* content_length_str = getenv("CONTENT_LENGTH");
     int content_length = content_length_str ? atoi(content_length_str) : 0;
@@ -27,24 +27,23 @@ int main() {
     // 读取POST数据
     char* input = (char *)malloc(content_length + 1);
     if (input == NULL) {
-        format_response(-1, cJSON_CreateString("服务器异常"), false);
+        format_response(-1, cJSON_CreateString("参数不正确"), false);
         return -1;
     }
     fread(input, content_length, 1, stdin);
     input[content_length] = '\0';
-    
     // 解析JSON
     cJSON* json = cJSON_Parse(input);
     free(input);
     if (json == NULL) {
-        format_response(-1, cJSON_CreateString("服务器异常"), false);
+        format_response(-1, cJSON_CreateString("参数不正确"), false);
         cJSON_Delete(json);
         return -1;
     }
-    // 处理具体的命令
-    cJSON *operate = cJSON_GetObjectItemCaseSensitive(json, "operate");
-    if (!cJSON_IsString(operate)) {
-        format_response(-1, cJSON_CreateString("服务器异常"), false);
+    // 判断JSON
+    cJSON *isOpen = cJSON_GetObjectItemCaseSensitive(json, "isOpen");
+    if (!cJSON_IsBool(isOpen)) {
+        format_response(-1, cJSON_CreateString("参数不正确"), false);
         cJSON_Delete(json);
         return -1;
     }
@@ -57,11 +56,13 @@ int main() {
         cJSON_Delete(json);
         return -1;
     }
-    MessageBody body;
-    strncpy(body.operate, operate->valuestring, sizeof(body.operate) - 1);
-    body.operate[sizeof(body.operate) - 1] = '\0';
-    body.which = 1;
-    Message msg = { .type = 3, .body = body };
+    Message msg;
+    char* operate = cJSON_IsTrue(isOpen) ? "on" : "off";
+    msg.type = 3;
+    strncpy(msg.body.operate, operate, sizeof(msg.body.operate) - 1);
+    msg.body.operate[sizeof(msg.body.operate) - 1] = '\0';
+    msg.body.which = 1;
+    
     int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
     if (result == -1) {
         format_response(-1, cJSON_CreateString("服务器异常"), false);
