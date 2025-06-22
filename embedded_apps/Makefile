@@ -61,5 +61,5 @@ clean:
 .PHONY: all test clean
 
 deploy: all
-	sudo cp $(TARGET) $(TEST_TARGET) ~/nfs/4412/smart_home
+	sudo cp $(TARGET) $(TEST_TARGET) ~/nfs/4412/warm_home
 	@echo "Deploy done."

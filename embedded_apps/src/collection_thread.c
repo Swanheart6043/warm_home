@@ -42,10 +42,31 @@ void* collection_thread(void* params) {
     content->base2.A9_RESERVED_1 = reserved_data.A9_RESERVED_1;
     content->base3.temperature = zeebig_data.temperature;
     content->base3.humidity = zeebig_data.humidity;
+
+    printf("\n");
+	printf("%f\n", content->adc);
+	printf("%f\n", content->base1.CYROX);
+	printf("%f\n", content->base1.CYROY);
+	printf("%f\n", content->base1.CYROZ);
+	printf("%f\n", content->base1.AACX);
+	printf("%f\n", content->base1.AACY);
+    printf("%f\n", content->base1.AACZ);
+    printf("%f\n", content->base3.temperature);
+    printf("%f\n", content->base3.humidity);
 }
 
 float get_adc() {
     int data = 0;
+    int fd = open("/dev/adc0", O_RDWR);
+    if (fd == -1) {
+        printf("Open /dev/adc0 failed\n");
+        return data;
+    }
+    int readResult = read(fd, &data, sizeof(data));
+    /*将结果转换成实际的电压值mv*/
+    data *= 0.44;
+    close(fd);
+	fd = -1;
     return data;
 }
 

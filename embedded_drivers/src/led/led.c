@@ -128,6 +128,9 @@ static struct class* match_class_create(const char *name) {
 
 static int led_probe(struct platform_device *p_pltdev) {
 	int ret;
+    printk(KERN_ALERT "=== LED PROBE FUNCTION CALLED ===\n");
+    printk(KERN_INFO "Device name: %s\n", p_pltdev->name);
+    printk(KERN_INFO "Device of_node: %p\n", p_pltdev->dev.of_node);
 
 	// 申请设备号
 	ret = alloc_chrdev_region(&dev_num, 0, dev_count, "led");
@@ -184,14 +187,14 @@ static int led_remove(struct platform_device *p_pltdev) {
 }
 
 struct of_device_id myleddrv_of_ids[] = {
-	[0] = {.compatible = "fs4412,led2-5"},
+	[0] = {.compatible = "fs4412, led2-5"},
 	[1] = {.compatible = "origen4412,led6-9"},
 	[2] = {},
 };
 
 struct platform_driver led_driver = {
 	.driver = {
-		.name = "fs4412leds",
+		.name = "fs4412-leds",
 		.of_match_table = myleddrv_of_ids,
 	},
 	.probe = led_probe,

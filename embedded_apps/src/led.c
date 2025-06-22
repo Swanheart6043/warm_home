@@ -25,7 +25,7 @@ void led(MessageBody msg_body) {
 		printf("open /dev/led failed\n");
 		return;
 	}
-	ioctl(fd, msg_body.operate == "on" ? LED_ON : LED_OFF, msg_body.which + 1);
+	ioctl(fd, strcmp(msg_body.operate, "on") == 0 ? LED_ON : LED_OFF, msg_body.which + 1);
 
 	close(fd);
 	fd = -1;
