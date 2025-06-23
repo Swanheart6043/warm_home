@@ -177,6 +177,4 @@ hexdump -C /proc/device-tree/fs4412-leds/compatible
 
 排查共享内存是不是没东西
 
-实现adc驱动
-
 增加数据库
