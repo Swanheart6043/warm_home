@@ -53,8 +53,6 @@ export const Environmental = () => {
           <Card name={a9List[4]?.name} count={a9List[4]?.count} />
           <Card name={a9List[5]?.name} count={a9List[5]?.count} />
           <Card name={a9List[6]?.name} count={a9List[6]?.count} />
-          <Card name={a9List[7]?.name} count={a9List[7]?.count} />
-          <Card name={a9List[8]?.name} count={a9List[8]?.count} />
         </div>
       </div>
 
@@ -64,7 +62,7 @@ export const Environmental = () => {
         </div>
         <div style={{ color: '#000' }}>
           <Card name={zeebigList[0]?.name} count={zeebigList[0]?.count} />
-          <Card name={zeebigList[0]?.name} count={zeebigList[0]?.count} />
+          <Card name={zeebigList[1]?.name} count={zeebigList[1]?.count} />
         </div>
       </div>
     </div>
