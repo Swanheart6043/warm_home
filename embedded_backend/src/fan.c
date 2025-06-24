@@ -8,7 +8,7 @@
 #include "../include/format_response.h"
 #include "../../embedded_common/include/message.h"
 
-int main() {    
+int fan() {    
     printf("Content-Type: application/json\r\n\r\n");
 
     // 判断请求方式

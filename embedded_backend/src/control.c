@@ -26,29 +26,15 @@ cJSON* format_array(Item list[], int length) {
     return array;
 }
 
-int main() {
-    printf("Content-Type: application/json\r\n\r\n");
-    const char* method = getenv("REQUEST_METHOD");
-    if (method == NULL) {
-        format_response(-1, cJSON_CreateString("请求方式错误"), false);
+static int str_equal(char* s, size_t len, const char *str) {
+    return len == strlen(str) && memcmp(s, str, len) == 0;
+}
+
+int control(char* request_method, size_t request_method_len, struct mg_connection *c) {
+    if (!str_equal(request_method, request_method_len, "GET")) {
+        mg_http_reply(c, 405, "", "请求方式错误");
         return -1;
     }
-    if (strcmp(method, "GET") != 0) {
-        format_response(-1, cJSON_CreateString("请求方式错误"), false);
-        return -1;
-    }
-    
-    // int msg_id = msgget(ftok("/tmp", 'g'), 0666 | IPC_CREAT);
-    // if (msg_id < 0) {
-    //     perror("msgget");
-    //     return -1;
-    // }
-    // struct message { long type; char text[5] } msg = { 1, "read" };
-    // int result = msgsnd(msg_id, &msg, strlen(msg.text)+1, 0);
-    // if (result < 0) {
-    //     perror("msgsnd");
-    //     return -1;
-    // }
     
     Item lamp_list[4] = {
         { 1, "灯1", false }, 
@@ -80,7 +66,8 @@ int main() {
     cJSON_AddItemToObject(data, "speakers", speaker);
     cJSON_AddItemToObject(data, "fan", fan);
     cJSON_AddItemToObject(data, "digitalTube", digital_tube);
-    format_response(0, data, true);
-
+    char* response = format_response(0, data, true);
+    mg_http_reply(c, 200, "Content-Type: application/json\r\n", response);
+    free(response);
     return 0;
 }

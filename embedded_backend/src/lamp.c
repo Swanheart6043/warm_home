@@ -9,7 +9,7 @@
 #include "../../embedded_common/include/message.h"
 #include "../../embedded_common/include/led.h"
 
-int main() {
+int lamp() {
     printf("Content-Type: application/json\r\n\r\n");
 
     // 判断请求方式

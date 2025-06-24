@@ -14,7 +14,7 @@ typedef struct {
     float count;
 } Item;
 
-cJSON* format_array(Item list[], int length) {
+cJSON* format_array_env(Item list[], int length) {
     int i;
     cJSON *array = cJSON_CreateArray();
     if (array == NULL) return NULL;
@@ -28,7 +28,7 @@ cJSON* format_array(Item list[], int length) {
     return array;
 }
 
-int main() {
+int env() {
     printf("Content-Type: application/json\r\n\r\n");
 
     const char* method = getenv("REQUEST_METHOD");   
@@ -67,8 +67,8 @@ int main() {
     };
     int a9_list_length = sizeof(a9_list) / sizeof(a9_list[0]);
     int zeebig_list_length = sizeof(zeebig_list) / sizeof(zeebig_list[0]);
-    cJSON* a9 = format_array(a9_list, a9_list_length);
-    cJSON* zeebig = format_array(zeebig_list, zeebig_list_length);
+    cJSON* a9 = format_array_env(a9_list, a9_list_length);
+    cJSON* zeebig = format_array_env(zeebig_list, zeebig_list_length);
     
     cJSON* data = cJSON_CreateObject();
     cJSON_AddItemToObject(data, "a9", a9);
