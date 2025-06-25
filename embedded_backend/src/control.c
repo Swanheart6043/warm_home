@@ -31,12 +31,7 @@ static int str_equal(char* s, size_t len, const char *str) {
     return len == strlen(str) && memcmp(s, str, len) == 0;
 }
 
-int control(char* request_method, size_t request_method_len, struct mg_connection *c) {
-    if (!str_equal(request_method, request_method_len, "GET")) {
-        mg_http_reply(c, 405, "", "请求方式错误");
-        return -1;
-    }
-    
+int control(struct mg_connection *c) {
     Item lamp_list[4] = {
         { 1, "灯1", false }, 
         { 2, "灯2", false }, 

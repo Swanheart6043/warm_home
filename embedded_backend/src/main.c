@@ -3,38 +3,47 @@
 #include <string.h>
 #include "common.h"
 
-static int str_equal(struct mg_str s, const char *str) {
-    return s.len == strlen(str) && memcmp(s.buf, str, s.len) == 0;
+static int check_string(struct mg_str str1, const char* str2) {
+    return str1.len == strlen(str2) && memcmp(str1.buf, str2, str1.len) == 0;
 }
 
 static void ev_handler(struct mg_connection *c, int ev, void *ev_data) {
-    if (ev == MG_EV_HTTP_MSG) {
-        struct mg_http_message *hm = (struct mg_http_message *) ev_data;
-        
-        if (str_equal(hm->uri, "/control")) {
-            control(hm->method.buf, hm->method.len, c);
-            return;
-        }
-        if (str_equal(hm->uri, "/api/data")) {
-            if (!str_equal(hm->method, "POST")) {
-                mg_http_reply(c, 405, "", "Method Not Allowed");
-                return;
-            }
-            printf("收到POST数据: %.*s\n", (int)hm->body.len, hm->body.buf);
-            mg_http_reply(c, 200, "Content-Type: application/json\r\n","{\"received\":true}");
-            return;
-        }
-        if (str_equal(hm->uri, "/api/data")) {
-            if (!str_equal(hm->method, "POST")) {
-                mg_http_reply(c, 405, "", "Method Not Allowed");
-                return;
-            }
-            printf("收到POST数据: %.*s\n", (int)hm->body.len, hm->body.buf);
-            mg_http_reply(c, 200, "Content-Type: application/json\r\n","{\"received\":true}");
-            return;
-        }
-        mg_http_reply(c, 404, "", "Not Found");
+    if (ev != MG_EV_HTTP_MSG) {
+        printf("ev != MG_EV_HTTP_MSG\n");
+        return;
     }
+    
+    struct mg_http_message *hm = (struct mg_http_message *) ev_data;    
+    
+    if (check_string(hm->uri, "/control")) {
+        if (!check_string(hm->method, "GET")) {
+            mg_http_reply(c, 405, "", "请求方式错误");
+            return;
+        }
+        control(c);
+        return;
+    }
+
+    if (check_string(hm->uri, "/api/data")) {
+        if (!check_string(hm->method, "POST")) {
+            mg_http_reply(c, 405, "", "Method Not Allowed");
+            return;
+        }
+        printf("收到POST数据: %.*s\n", (int)hm->body.len, hm->body.buf);
+        mg_http_reply(c, 200, "Content-Type: application/json\r\n","{\"received\":true}");
+        return;
+    }
+    
+    if (check_string(hm->uri, "/api/data")) {
+        if (!check_string(hm->method, "POST")) {
+            mg_http_reply(c, 405, "", "Method Not Allowed");
+            return;
+        }
+        printf("收到POST数据: %.*s\n", (int)hm->body.len, hm->body.buf);
+        mg_http_reply(c, 200, "Content-Type: application/json\r\n","{\"received\":true}");
+        return;
+    }
+    mg_http_reply(c, 404, "", "Not Found");
 }
 
 int main() {

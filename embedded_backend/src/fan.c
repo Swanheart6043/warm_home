@@ -7,6 +7,7 @@
 #include "../include/cJSON.h"
 #include "../include/format_response.h"
 #include "../../embedded_common/include/message.h"
+#include "../include/common.h"
 
 int fan() {    
     printf("Content-Type: application/json\r\n\r\n");
@@ -25,12 +26,15 @@ int fan() {
         return -1;
     }
     // 读取POST数据
-    char* input = (char *)malloc(content_length + 1);
+    char* input = (char *)malloc((size_t)content_length + 1);
     if (input == NULL) {
         format_response(-1, cJSON_CreateString("参数不正确"), false);
         return -1;
     }
-    fread(input, content_length, 1, stdin);
+    size_t r = fread(input, (size_t)content_length, 1, stdin);
+    if (!r) {
+        return -1;
+    }
     input[content_length] = '\0';
     // 解析JSON
     cJSON* json = cJSON_Parse(input);

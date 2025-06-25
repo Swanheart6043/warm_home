@@ -75,6 +75,6 @@ int env() {
     cJSON_AddItemToObject(data, "zeebig", zeebig);
     format_response(0, data, true);
 
-    shmdt(shmid);
+    shmdt(content);
     return 0;
 }

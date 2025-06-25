@@ -3,10 +3,10 @@
 
 #include "mongoose.h"
 
-int control(char* request_method, size_t request_method_len, struct mg_connection *c);
-int lamp();
-int speakers();
-int fan();
+int control(struct mg_connection *c);
+int lamp(void);
+int speakers(void);
+int fan(void);
 int env(void);
 
 #endif
