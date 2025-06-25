@@ -58,6 +58,19 @@ void daemonize() {
     // }
 }
 
+int create_ipc_file(const char* filepath) {
+    struct stat st;
+    if (stat(filepath, &st) == 0) {
+        return 0;  // 文件已存在
+    }    
+    FILE* fp = fopen(filepath, "w");
+    if (fp == NULL) return -1;
+    
+    fclose(fp);
+    chmod(filepath, 0644); // 设置合适的权限
+    return 0;
+}
+
 void match_msg(long type, MessageBody body) {
     if (!type) {
         return;
@@ -95,22 +108,34 @@ void match_msg(long type, MessageBody body) {
 int main() {
     // 先做守护化
     daemonize();
-
-    // 初始化消息 
-    key_t key = ftok("/tmp/control.txt", 'g');
-    if (key == -1) {
-        printf("key cannot be == -1\n");
+    // 确保IPC文件存在
+    const char* ipc_file_path = "/tmp/ipc_file";
+    if (create_ipc_file(ipc_file_path) < 0) {
+        printf("创建ipc文件失败\n");
         return -1;
     }
-    int msgid = msgget(key, IPC_CREAT|0666);
-    if (msgid == -1) {
-        printf("msgid cannot be == -1\n");
+    // 初始化消息队列 共享内存
+    key_t msg_key = ftok(ipc_file_path, 'M');
+    key_t shm_key = ftok(ipc_file_path, 'S');
+    if (shm_key == -1 || msg_key == -1) {
+        printf("消息队列 共享内存key == -1\n");
+        return -1;
+    }
+    int msgid = msgget(msg_key, IPC_CREAT|0666);
+    int shmid = shmget(shm_key, 512, IPC_CREAT|0666);
+    if (msgid == -1 || shmid == -1) {
+        printf("消息队列 共享内存id == -1\n");
         return -1;
     }
     printf("Start app...\n");
     
     // 创建常驻线程
-    int collection_thread_result = pthread_create(&collection_tid, NULL, collection_thread, NULL);
+    thread_data_t collection_thread_params = { 
+        .shm_id = shmid, 
+        .shm_key = shm_key, 
+        1024 
+    };
+    int collection_thread_result = pthread_create(&collection_tid, NULL, collection_thread, &collection_thread_params);
     if (collection_thread_result == -1) {
         perror("Failed to create collection thread");
         return -1;
