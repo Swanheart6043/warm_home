@@ -15,10 +15,10 @@ void* collection_thread(void* params) {
     printf("Start collection thread...\n");
     pthread_t threadId = pthread_self();
 
+    thread_data_t* params_copy = (thread_data_t*)params;
     RequestData requestParams;
-    key_t key = ftok("/tmp/env.txt", 65);
-    int shmid = shmget(key, 512, IPC_CREAT|0666);
-    RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
+
+    RequestData* content = (RequestData*)shmat(params_copy->shm_id, NULL, 0);
     // bzero(content,512);
     strcpy((char*)content, (char*)&requestParams);
     
@@ -31,7 +31,7 @@ void* collection_thread(void* params) {
     ZeeBigData zeebig_data = temperature();
     ReservedData reserved_data = get_reserved();
     
-    content->adc = adc_data;
+    content->adc = adc_data / 1000.00;
     content->base1.CYROX = mpu6050_data.CYROX;
     content->base1.CYROY = mpu6050_data.CYROY;
     content->base1.CYROZ = mpu6050_data.CYROZ;
@@ -44,15 +44,15 @@ void* collection_thread(void* params) {
     content->base3.humidity = zeebig_data.humidity;
 
     printf("\n");
-	printf("%f\n", content->adc);
-	printf("%f\n", content->base1.CYROX);
-	printf("%f\n", content->base1.CYROY);
-	printf("%f\n", content->base1.CYROZ);
-	printf("%f\n", content->base1.AACX);
-	printf("%f\n", content->base1.AACY);
-    printf("%f\n", content->base1.AACZ);
-    printf("%f\n", content->base3.temperature);
-    printf("%f\n", content->base3.humidity);
+	printf("adc: %f\n", content->adc);
+	printf("CYROX: %f\n", content->base1.CYROX);
+	printf("CYROY: %f\n", content->base1.CYROY);
+	printf("CYROZ: %f\n", content->base1.CYROZ);
+	printf("AACX: %f\n", content->base1.AACX);
+	printf("AACY: %f\n", content->base1.AACY);
+    printf("AACZ: %f\n", content->base1.AACZ);
+    printf("temperature: %f\n", content->base3.temperature);
+    printf("humidity: %f\n", content->base3.humidity);
 }
 
 float get_adc() {
