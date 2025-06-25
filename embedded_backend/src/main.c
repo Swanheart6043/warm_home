@@ -1,7 +1,7 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
-#include "../include/common.h"
+#include "common.h"
 
 static int str_equal(struct mg_str s, const char *str) {
     return s.len == strlen(str) && memcmp(s.buf, str, s.len) == 0;

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "../include/cJSON.h"
 #include "../include/format_response.h"
+#include "../include/common.h"
 
 typedef struct {
     int key;
@@ -11,7 +12,7 @@ typedef struct {
     bool checked;
 } Item;
 
-cJSON* format_array(Item list[], int length) {
+static cJSON* format_array(Item list[], int length) {
     int i;
     cJSON* array = cJSON_CreateArray();
     if (array == NULL) return NULL;
@@ -66,8 +67,11 @@ int control(char* request_method, size_t request_method_len, struct mg_connectio
     cJSON_AddItemToObject(data, "speakers", speaker);
     cJSON_AddItemToObject(data, "fan", fan);
     cJSON_AddItemToObject(data, "digitalTube", digital_tube);
+
+
     char* response = format_response(0, data, true);
-    mg_http_reply(c, 200, "Content-Type: application/json\r\n", response);
-    free(response);
+    printf("*******%s\n", response);
+    // mg_http_reply(c, 200, "Content-Type: application/json\r\n", response);
+    // free(response);
     return 0;
 }

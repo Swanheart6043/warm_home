@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include "../include/cJSON.h"
+#include "../include/common.h"
 #include "../include/format_response.h"
 #include "../../embedded_common/include/shared_memory.h"
 
@@ -14,7 +14,7 @@ typedef struct {
     float count;
 } Item;
 
-cJSON* format_array_env(Item list[], int length) {
+static cJSON* format_array_env(Item list[], int length) {
     int i;
     cJSON *array = cJSON_CreateArray();
     if (array == NULL) return NULL;
@@ -75,6 +75,6 @@ int env() {
     cJSON_AddItemToObject(data, "zeebig", zeebig);
     format_response(0, data, true);
 
-    shmdt((void*)shmid);
+    shmdt(shmid);
     return 0;
 }

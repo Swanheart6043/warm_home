@@ -1,7 +1,22 @@
 CC = arm-none-linux-gnueabi-gcc
-CFLAGS = -Wall -I./include -I./src/utils -I./src/cjson -I./src/mongoose
-CFLAGS += -std=c99
-CFLAGS += -D_GNU_SOURCE -D_POSIX_C_SOURCE=200809L
+
+CFLAGS = \
+	-std=c11 \
+	-Wall -Wextra -Werror \
+	-Wpedantic \
+    -Wconversion -Wsign-conversion \
+    -Wshadow -Wundef \
+    -Wmissing-prototypes -Wmissing-declarations \
+    -Wcast-align -Wcast-qual \
+    -Wformat=2 -Wformat-security \
+    -fsanitize=address,undefined \
+    -O1 -g
+CFLAGS += \
+	-I./include
+CFLAGS += \
+	-D_GNU_SOURCE \
+	-D_POSIX_C_SOURCE=200809L
+
 SRC_DIR = src
 UTILS_DIR = src/utils
 CJSON_DIR = src/cjson
