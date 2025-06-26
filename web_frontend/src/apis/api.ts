@@ -1,5 +1,18 @@
-import axios from "axios"
+import axios from "axios";
+import { message } from "antd";
 import type { Response, ResponseList, Control, Environmenta, ControlRequest } from "./apiType"
+
+axios.defaults.baseURL = "http://192.168.1.100:8080";
+
+axios.interceptors.request.use(async (requestConfig) => {
+  return requestConfig;
+});
+
+axios.interceptors.response.use((response: any) => {
+  const { success, errMsg } = response.data || {};
+  if (success) return response;
+  message.error(errMsg);
+});
 
 export const fetchControlData = async () => {
   const result = await axios.get<Response<Control>>('/api/control')
