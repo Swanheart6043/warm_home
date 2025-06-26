@@ -28,4 +28,7 @@ echo "Loading App..."
 ./warm_home/warm_home_app
 
 echo "Loading Backend..."
+./warm_home/warm_home_backend
+
+echo "Loading Boa..."
 ./boa/boa

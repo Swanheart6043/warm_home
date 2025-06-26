@@ -13,7 +13,45 @@ int msgid;
 int shmid;
 
 static void daemonize() {
+    pid_t pid = fork();
+    if (pid < 0) {
+        perror("fork failed");
+        exit(1);
+    }
+    // 父进程直接退出
+    if (pid > 0) {
+        exit(0);
+    }
+    // 子进程
+    if (setsid() < 0) {
+        perror("setsid failed");
+        exit(1);
+    }
+    // 避免 reacquire tty
+    signal(SIGHUP, SIG_IGN);
 
+    // 再 fork 一次，确保不可再打开控制终端
+    pid = fork();
+    if (pid < 0) {
+        perror("fork #2 failed");
+        exit(1);
+    }
+    if (pid > 0) {
+        exit(0);
+    }
+
+    // 切换到根目录，并重设 umask
+    chdir("/");
+    umask(0);
+
+    // 重定向标准文件描述符
+    // int fd = open("/dev/null", O_RDWR, 0);
+    // if (fd != -1) {
+    //     dup2(fd, STDIN_FILENO);
+    //     dup2(fd, STDOUT_FILENO);
+    //     dup2(fd, STDERR_FILENO);
+    //     if (fd > 2) close(fd);
+    // }
 }
 
 static int create_ipc_file(const char* filepath) {
@@ -64,12 +102,10 @@ static void match_route(struct mg_connection *c, int ev, void *request_info) {
             mg_http_reply(c, 405, cors_headers, "请求方式错误");
             return;
         }
-        printf("&&&&&&&&&&&&&&&&&&\n");
         if ((int)hm->body.len <= 0) {
             mg_http_reply(c, 200, cors_headers, "参数不能为空");
             return;
         }
-        printf("******************\n");
         lamp(c, hm);
         return;
     }
