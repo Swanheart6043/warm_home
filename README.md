@@ -167,6 +167,13 @@ cat /proc/device-tree/fs4412-leds/compatible
 hexdump -C /proc/device-tree/fs4412-leds/compatible
 ```
 
+### 打印报段错误
+声明的类型和实现的地方不一致，普通模式不会报错，但是运行会报段错误
+-Wextra -Werror
+
+### 头文件空参数也报找不到
+给头文件括号里放个void
+
 ### c语言缺少一些方便的库
 - 打印结构体
 - 打印森林数组
