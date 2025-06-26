@@ -2,7 +2,7 @@ import axios from "axios";
 import { message } from "antd";
 import type { Response, ResponseList, Control, Environmenta, ControlRequest } from "./apiType"
 
-axios.defaults.baseURL = "http://192.168.1.100:8080";
+axios.defaults.baseURL = "http://192.168.1.100:8081";
 
 axios.interceptors.request.use(async (requestConfig) => {
   return requestConfig;
