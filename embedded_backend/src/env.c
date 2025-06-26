@@ -5,7 +5,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
-#include "../include/cJSON.h"
+#include "../include/common.h"
 #include "../include/format_response.h"
 #include "../../embedded_common/include/shared_memory.h"
 
@@ -14,7 +14,7 @@ typedef struct {
     float count;
 } Item;
 
-cJSON* format_array(Item list[], int length) {
+static cJSON* format_array_env(Item list[], int length) {
     int i;
     cJSON *array = cJSON_CreateArray();
     if (array == NULL) return NULL;
@@ -28,28 +28,17 @@ cJSON* format_array(Item list[], int length) {
     return array;
 }
 
-int main() {
-    printf("Content-Type: application/json\r\n\r\n");
+extern int shmid;
+int env(struct mg_connection *c) {
+    char* headers =
+        "Access-Control-Allow-Origin: *\r\n"
+        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
+        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
+        "Content-Type: application/json\r\n";
+    printf("env\n");
 
-    const char* method = getenv("REQUEST_METHOD");   
-    if (method == NULL) {
-        format_response(-1, NULL, false);
-        return -1;
-    }
-    if (strcmp(method, "GET") != 0) {
-        format_response(-1, NULL, false);
-        return -1;
-    }
-    
-    key_t key = ftok("/tmp/env.txt", 65);
-    int shmid = shmget(key, 512, 0666);
-    if (key == -1 || shmid == -1) {
-        format_response(-1, NULL, false);
-        return -1;
-    }
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
     // bzero(content,512);
-    
     Item a9_list[9] = {
         { "Adc", content->adc },
         { "CYROX", content->base1.CYROX },
@@ -67,14 +56,15 @@ int main() {
     };
     int a9_list_length = sizeof(a9_list) / sizeof(a9_list[0]);
     int zeebig_list_length = sizeof(zeebig_list) / sizeof(zeebig_list[0]);
-    cJSON* a9 = format_array(a9_list, a9_list_length);
-    cJSON* zeebig = format_array(zeebig_list, zeebig_list_length);
+    cJSON* a9 = format_array_env(a9_list, a9_list_length);
+    cJSON* zeebig = format_array_env(zeebig_list, zeebig_list_length);
     
     cJSON* data = cJSON_CreateObject();
     cJSON_AddItemToObject(data, "a9", a9);
     cJSON_AddItemToObject(data, "zeebig", zeebig);
-    format_response(0, data, true);
 
-    shmdt((void*)shmid);
+    char* response = format_response(0, data, true);
+    mg_http_reply(c, 200, headers, response);
+    free(response);
     return 0;
 }

@@ -4,6 +4,7 @@
 #include <string.h>
 #include "../include/cJSON.h"
 #include "../include/format_response.h"
+#include "../include/common.h"
 
 typedef struct {
     int key;
@@ -11,7 +12,7 @@ typedef struct {
     bool checked;
 } Item;
 
-cJSON* format_array(Item list[], int length) {
+static cJSON* format_array(Item list[], int length) {
     int i;
     cJSON* array = cJSON_CreateArray();
     if (array == NULL) return NULL;
@@ -26,30 +27,14 @@ cJSON* format_array(Item list[], int length) {
     return array;
 }
 
-int main() {
-    printf("Content-Type: application/json\r\n\r\n");
-    const char* method = getenv("REQUEST_METHOD");
-    if (method == NULL) {
-        format_response(-1, cJSON_CreateString("请求方式错误"), false);
-        return -1;
-    }
-    if (strcmp(method, "GET") != 0) {
-        format_response(-1, cJSON_CreateString("请求方式错误"), false);
-        return -1;
-    }
-    
-    // int msg_id = msgget(ftok("/tmp", 'g'), 0666 | IPC_CREAT);
-    // if (msg_id < 0) {
-    //     perror("msgget");
-    //     return -1;
-    // }
-    // struct message { long type; char text[5] } msg = { 1, "read" };
-    // int result = msgsnd(msg_id, &msg, strlen(msg.text)+1, 0);
-    // if (result < 0) {
-    //     perror("msgsnd");
-    //     return -1;
-    // }
-    
+int control(struct mg_connection *c) {
+    char* headers =
+        "Access-Control-Allow-Origin: *\r\n"
+        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
+        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
+        "Content-Type: application/json\r\n";
+    printf("control\n");
+
     Item lamp_list[4] = {
         { 1, "灯1", false }, 
         { 2, "灯2", false }, 
@@ -80,7 +65,9 @@ int main() {
     cJSON_AddItemToObject(data, "speakers", speaker);
     cJSON_AddItemToObject(data, "fan", fan);
     cJSON_AddItemToObject(data, "digitalTube", digital_tube);
-    format_response(0, data, true);
 
+    char* response = format_response(0, data, true);
+    mg_http_reply(c, 200, headers, response);
+    free(response);
     return 0;
 }

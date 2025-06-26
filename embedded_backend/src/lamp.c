@@ -8,76 +8,54 @@
 #include "../include/format_response.h"
 #include "../../embedded_common/include/message.h"
 #include "../../embedded_common/include/led.h"
+#include "../include/common.h"
 
-int main() {
-    printf("Content-Type: application/json\r\n\r\n");
+extern int msgid;
+int lamp(struct mg_connection *c, struct mg_http_message* hm) {
+    printf("lamp\n");
+    char* headers =
+        "Access-Control-Allow-Origin: *\r\n"
+        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
+        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
+        "Content-Type: application/json\r\n";
 
-    // 判断请求方式
-    const char* method = getenv("REQUEST_METHOD");
-    if (strcmp(method, "POST") != 0) {
-        format_response(-1, cJSON_CreateString("请求方式错误"), false);
-        return -1;
-    }
-    // 获取Post数据长度
-    char* content_length_str = getenv("CONTENT_LENGTH");
-    int content_length = content_length_str ? atoi(content_length_str) : 0;
-    if (content_length <= 0) {
-        format_response(-1, cJSON_CreateString("请求参数不能为空"), false);
-        return -1;
-    }
-    // 读取Post数据
-    char* input = (char *)malloc(content_length + 1);
-    if (input == NULL) {
-        format_response(-1, cJSON_CreateString("参数不正确"), false);
-        return -1;
-    }
-    fread(input, content_length, 1, stdin);
-    input[content_length] = '\0';
-    // 解析JSON
-    cJSON* json = cJSON_Parse(input);
-    free(input);
+    cJSON* json = cJSON_Parse(hm->body.buf);
     if (json == NULL) {
-        format_response(-1, cJSON_CreateString("参数不正确"), false);
+        mg_http_reply(c, 405, headers, "参数不正确");
         cJSON_Delete(json);
         return -1;
     }
-    // 判断JSON
-    cJSON *isOpen = cJSON_GetObjectItemCaseSensitive(json, "isOpen");
-    cJSON *which = cJSON_GetObjectItemCaseSensitive(json, "which");
+    cJSON* isOpen = cJSON_GetObjectItemCaseSensitive(json, "isOpen");
+    cJSON* which = cJSON_GetObjectItemCaseSensitive(json, "which");
     if (!cJSON_IsBool(isOpen)) {
-        format_response(-1, cJSON_CreateString("参数不正确"), false);
+        mg_http_reply(c, 405, headers, "参数不正确");
         cJSON_Delete(json);
         return -1;
     }
     if (!cJSON_IsNumber(which)) {
-        format_response(-1, cJSON_CreateString("参数不正确"), false);
+        mg_http_reply(c, 405, headers, "参数不正确");
         cJSON_Delete(json);
         return -1;
     }
+    printf("isOpen: %s\n", isOpen->valuestring);
+    printf("which: %d\n", which->valueint);
 
-    // 通知应用层
-    key_t key = ftok("/tmp/control.txt", 'g');
-    int msgid = msgget(key, IPC_CREAT|0666);
-    if (key == -1 || msgid == -1) {
-        format_response(-11, cJSON_CreateString("服务器异常"), false);
-        cJSON_Delete(json);
-        return -1;
-    }
     Message msg;
     char* operate = cJSON_IsTrue(isOpen) ? "on" : "off";
     msg.type = 1;
     strncpy(msg.body.operate, operate, sizeof(msg.body.operate) - 1);
     msg.body.operate[sizeof(msg.body.operate) - 1] = '\0';
-    msg.body.which = which->valueint;
-    
+    msg.body.which = (unsigned short)which->valueint;
     int result = msgsnd(msgid, &msg, sizeof(msg.body), 0);
     if (result == -1) {
-        format_response(-1, cJSON_CreateString("服务器异常"), false);
+        mg_http_reply(c, 505, headers, "服务器异常");
         cJSON_Delete(json);
         return -1;
     }
     
-    format_response(0, cJSON_CreateString("操作成功"), true);
+    char* response = format_response(0, cJSON_CreateString("操作成功"), true);
+    mg_http_reply(c, 200, headers, response);
+    free(response);
     cJSON_Delete(json);
     return 0;
 }

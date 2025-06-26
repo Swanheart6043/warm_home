@@ -1,3 +1,3 @@
 #include "./cJSON.h"
 
-int format_response(int code, cJSON *data_obj, bool success);
+char* format_response(int code, cJSON *data_obj, bool success);

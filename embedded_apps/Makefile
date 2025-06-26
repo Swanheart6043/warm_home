@@ -54,7 +54,6 @@ $(BUILD_DIR)/test_%.o: $(TEST_DIR)/%.c
 	@mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# 清理编译生成的文件
 clean:
 	rm -rf $(BUILD_DIR)
 
