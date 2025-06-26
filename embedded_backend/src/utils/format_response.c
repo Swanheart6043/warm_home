@@ -4,6 +4,8 @@
 #include <string.h>
 #include "../../include/cJSON.h"
 
+char* format_response(int code, cJSON *data_obj, bool success);
+
 char* format_response(int code, cJSON *data_obj, bool success) {
     cJSON* root = cJSON_CreateObject();
     if (!root) {

@@ -28,28 +28,17 @@ static cJSON* format_array_env(Item list[], int length) {
     return array;
 }
 
-int env() {
-    printf("Content-Type: application/json\r\n\r\n");
+extern int shmid;
+int env(struct mg_connection *c) {
+    char* headers =
+        "Access-Control-Allow-Origin: *\r\n"
+        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
+        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
+        "Content-Type: application/json\r\n";
+    printf("env\n");
 
-    const char* method = getenv("REQUEST_METHOD");   
-    if (method == NULL) {
-        format_response(-1, NULL, false);
-        return -1;
-    }
-    if (strcmp(method, "GET") != 0) {
-        format_response(-1, NULL, false);
-        return -1;
-    }
-    
-    key_t key = ftok("/tmp/env.txt", 65);
-    int shmid = shmget(key, 512, 0666);
-    if (key == -1 || shmid == -1) {
-        format_response(-1, NULL, false);
-        return -1;
-    }
     RequestData* content = (RequestData*)shmat(shmid, NULL, 0);
     // bzero(content,512);
-    
     Item a9_list[9] = {
         { "Adc", content->adc },
         { "CYROX", content->base1.CYROX },
@@ -73,8 +62,9 @@ int env() {
     cJSON* data = cJSON_CreateObject();
     cJSON_AddItemToObject(data, "a9", a9);
     cJSON_AddItemToObject(data, "zeebig", zeebig);
-    format_response(0, data, true);
 
-    shmdt(content);
+    char* response = format_response(0, data, true);
+    mg_http_reply(c, 200, headers, response);
+    free(response);
     return 0;
 }

@@ -27,11 +27,14 @@ static cJSON* format_array(Item list[], int length) {
     return array;
 }
 
-static int str_equal(char* s, size_t len, const char *str) {
-    return len == strlen(str) && memcmp(s, str, len) == 0;
-}
-
 int control(struct mg_connection *c) {
+    char* headers =
+        "Access-Control-Allow-Origin: *\r\n"
+        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
+        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
+        "Content-Type: application/json\r\n";
+    printf("control\n");
+
     Item lamp_list[4] = {
         { 1, "灯1", false }, 
         { 2, "灯2", false }, 
@@ -63,10 +66,8 @@ int control(struct mg_connection *c) {
     cJSON_AddItemToObject(data, "fan", fan);
     cJSON_AddItemToObject(data, "digitalTube", digital_tube);
 
-
     char* response = format_response(0, data, true);
-    printf("*******%s\n", response);
-    // mg_http_reply(c, 200, "Content-Type: application/json\r\n", response);
-    // free(response);
+    mg_http_reply(c, 200, headers, response);
+    free(response);
     return 0;
 }

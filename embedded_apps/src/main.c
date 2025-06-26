@@ -3,12 +3,12 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <sys/msg.h>
-#include "../include/common.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <signal.h>
 #include <sys/prctl.h>
+#include "../include/common.h"
 
 pthread_t buzzer_tid;
 pthread_t fan_tid;
@@ -148,6 +148,6 @@ int main() {
         match_msg(msg.type, msg.body);
         usleep(10000);
     }
-
+    
     return 0;
 }

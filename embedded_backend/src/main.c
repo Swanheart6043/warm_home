@@ -1,73 +1,152 @@
-#define _GNU_SOURCE
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/msg.h>
+#include <sys/shm.h>
 #include <string.h>
-#include "common.h"
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <sys/prctl.h>
+#include "../include/common.h"
+
+int msgid;
+int shmid;
+
+static void daemonize() {
+
+}
+
+static int create_ipc_file(const char* filepath) {
+    struct stat st;
+    if (stat(filepath, &st) == 0) {
+        return 0;  // 文件已存在
+    }    
+    FILE* fp = fopen(filepath, "w");
+    if (fp == NULL) return -1;
+    
+    fclose(fp);
+    chmod(filepath, 0644); // 设置合适的权限
+    return 0;
+}
 
 static int check_string(struct mg_str str1, const char* str2) {
     return str1.len == strlen(str2) && memcmp(str1.buf, str2, str1.len) == 0;
 }
 
-static void ev_handler(struct mg_connection *c, int ev, void *ev_data) {
+static void match_route(struct mg_connection *c, int ev, void *request_info) {
+    char* cors_headers =
+        "Access-Control-Allow-Origin: *\r\n"
+        "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
+        "Access-Control-Allow-Headers: Content-Type, Authorization\r\n";
     if (ev != MG_EV_HTTP_MSG) {
-        printf("ev != MG_EV_HTTP_MSG\n");
         return;
     }
     
-    struct mg_http_message *hm = (struct mg_http_message *) ev_data;    
+    struct mg_http_message* hm = (struct mg_http_message *) request_info;    
     
-    if (check_string(hm->uri, "/control")) {
+    // 添加这里：处理所有 OPTIONS 预检请求
+    if (check_string(hm->method, "OPTIONS")) {
+        mg_http_reply(c, 200, cors_headers, "");
+        return;
+    }
+
+    if (check_string(hm->uri, "/api/control")) {
         if (!check_string(hm->method, "GET")) {
-            mg_http_reply(c, 405, "", "请求方式错误");
+            mg_http_reply(c, 405, cors_headers, "请求方式错误");
             return;
         }
         control(c);
         return;
     }
 
-    if (check_string(hm->uri, "/api/data")) {
+    if (check_string(hm->uri, "/api/lamp")) {
         if (!check_string(hm->method, "POST")) {
-            mg_http_reply(c, 405, "", "Method Not Allowed");
+            mg_http_reply(c, 405, cors_headers, "请求方式错误");
             return;
         }
-        printf("收到POST数据: %.*s\n", (int)hm->body.len, hm->body.buf);
-        mg_http_reply(c, 200, "Content-Type: application/json\r\n","{\"received\":true}");
+        printf("&&&&&&&&&&&&&&&&&&\n");
+        if ((int)hm->body.len <= 0) {
+            mg_http_reply(c, 200, cors_headers, "参数不能为空");
+            return;
+        }
+        printf("******************\n");
+        lamp(c, hm);
         return;
     }
     
-    if (check_string(hm->uri, "/api/data")) {
+    if (check_string(hm->uri, "/api/speakers")) {
         if (!check_string(hm->method, "POST")) {
-            mg_http_reply(c, 405, "", "Method Not Allowed");
+            mg_http_reply(c, 405, cors_headers, "请求方式错误");
             return;
         }
-        printf("收到POST数据: %.*s\n", (int)hm->body.len, hm->body.buf);
-        mg_http_reply(c, 200, "Content-Type: application/json\r\n","{\"received\":true}");
+        if ((int)hm->body.len <= 0) {
+            mg_http_reply(c, 405, cors_headers, "参数不能为空");
+            return;
+        }
+        speakers(c, hm);
         return;
     }
-    mg_http_reply(c, 404, "", "Not Found");
+
+    if (check_string(hm->uri, "/api/fan")) {
+        if (!check_string(hm->method, "POST")) {
+            mg_http_reply(c, 405, cors_headers, "请求方式错误");
+            return;
+        }
+        if ((int)hm->body.len <= 0) {
+            mg_http_reply(c, 405, cors_headers, "参数不能为空");
+            return;
+        }
+        fan(c, hm);
+        return;
+    }
+
+    if (check_string(hm->uri, "/api/env")) {
+        if (!check_string(hm->method, "GET")) {
+            mg_http_reply(c, 405, cors_headers, "请求方式错误");
+            return;
+        }
+        env(c);
+        return;
+    }
+
+    mg_http_reply(c, 404, cors_headers, "Not Found");
 }
 
 int main() {
+    // 先做守护化
+    daemonize();
+    // 确保IPC文件存在
+    const char* ipc_file_path = "/tmp/ipc_file";
+    if (create_ipc_file(ipc_file_path) < 0) {
+        printf("创建ipc文件失败\n");
+        return -1;
+    }
+    // 初始化消息队列 共享内存
+    key_t msg_key = ftok(ipc_file_path, 'M');
+    key_t shm_key = ftok(ipc_file_path, 'S');
+    if (shm_key == -1 || msg_key == -1) {
+        printf("消息队列 共享内存key == -1\n");
+        return -1;
+    }
+    msgid = msgget(msg_key, IPC_CREAT|0666);
+    shmid = shmget(shm_key, 512, IPC_CREAT|0666);
+    if (msgid == -1 || shmid == -1) {
+        printf("消息队列 共享内存id == -1\n");
+        return -1;
+    }
+
+    // 启服务
     struct mg_mgr mgr; // 事件管理器
-    struct mg_connection *c; // 连接对象
-    
-    // 初始化管理器
+    char* url = "http://192.168.1.100:8080";
     mg_mgr_init(&mgr);
+    mg_http_listen(&mgr, url, match_route, NULL);
+    printf("Server is running on http://192.168.1.100:8080\n");
     
-    // 启动HTTP服务器，监听8080端口
-    c = mg_http_listen(&mgr, "http://192.168.1.200:8080", ev_handler, NULL);
-    if (c == NULL) {
-        printf("无法启动服务器\n");
-        return 1;
+    // 监听轮询事件，超时1000ms
+    while (1) {
+        mg_mgr_poll(&mgr, 1000);
     }
-    
-    printf("服务器启动成功: http://localhost:8080\n");
-    printf("测试地址:\n");
-    printf("http://localhost:8080/hello\n");
-    
-    for (;;) {
-        mg_mgr_poll(&mgr, 1000); // 轮询事件，超时1000ms
-    }
-    
+
     mg_mgr_free(&mgr);
     return 0;
 }

@@ -1,21 +1,19 @@
+SYSROOT := /home/swanheart/codes/rootfs
+
 CC = arm-none-linux-gnueabi-gcc
 
 CFLAGS = \
-	-std=c11 \
+	-std=c99 \
 	-Wall -Wextra -Werror \
-	-Wpedantic \
-    -Wconversion -Wsign-conversion \
-    -Wshadow -Wundef \
     -Wmissing-prototypes -Wmissing-declarations \
-    -Wcast-align -Wcast-qual \
     -Wformat=2 -Wformat-security \
-    -fsanitize=address,undefined \
     -O1 -g
 CFLAGS += \
-	-I./include
-CFLAGS += \
+	-I./include \
 	-D_GNU_SOURCE \
 	-D_POSIX_C_SOURCE=200809L
+
+LDFLAGS := -static
 
 SRC_DIR = src
 UTILS_DIR = src/utils
@@ -46,7 +44,7 @@ all: $(TARGET)
 # 链接目标
 $(TARGET): $(ALL_OBJS)
 	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 # 编译src目录下的 .c 文件到 .o
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
@@ -74,5 +72,5 @@ clean:
 .PHONY: all clean
 
 deploy: all
-	sudo cp $(TARGET) ~/nfs/4412/4412/warm_home
+	sudo cp $(TARGET) ~/nfs/4412/warm_home
 	@echo "Deploy done."
